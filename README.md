@@ -1,9 +1,9 @@
-# etd-base-template
-python template for etd projects
+# ETD Alma Service
+A Python service that assists in creating an Alma record for the ETD
 
 <img src="https://github.com/harvard-lts/etd-base-template/actions/workflows/pytest.yml/badge.svg">
 
-<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/cgoines/68bd7e7d15e4025d7bf71431bad92771/raw/covbadge.json">
+<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ives1227/23aeb140c43a9e3d808fef60a7b6556d/raw/covbadge.json">
 
 # Using this Repository
 Read the wiki in the etd-base-template repo for instructions on how to set up the template and badge for your repository:
