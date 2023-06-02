@@ -1,7 +1,7 @@
 # ETD Alma Service
 A Python service that assists in creating an Alma record for the ETD
 
-<img src="https://github.com/harvard-lts/etd-base-template/actions/workflows/pytest.yml/badge.svg">
+<img src="https://github.com/harvard-lts/etd_alma_service/actions/workflows/pytest.yml/badge.svg">
 
 <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ives1227/23aeb140c43a9e3d808fef60a7b6556d/raw/covbadge.json">
 
