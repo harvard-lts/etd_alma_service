@@ -10,5 +10,7 @@ def send_to_alma(message):
     print("message")
     print(message)
     new_message = {"hello": "from etd-alma-service"}
-    app.send_task("tasks.tasks.do_task", args=[new_message], kwargs={},
+    # send message to
+    app.send_task("etd-alma-monitor-service.tasks.send_to_drs",
+                  args=[new_message], kwargs={},
                   queue=os.getenv('PUBLISH_QUEUE_NAME'))

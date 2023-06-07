@@ -40,3 +40,8 @@ A Python service that assists in creating an Alma record for the ETD
 - Set a property of `content_type` to `application/json`
 - Set the Payload to the following JSON content
 `{"id": "da28b429-e006-49a5-ae77-da41b925bd85","task": "etd-alma-service.tasks.send_to_alma","args": [{"hello":"world"}]}`
+
+###  Unit Testing
+- exec into docker
+- `> pytest tests/unit`
+- Note, integration tests are run as part of github actions, not locally

@@ -18,9 +18,9 @@ class Worker():
     def get_version(self):
         return self.version
 
+    # this should be replaced by a call to test sftp and exercised in the tests
     # this is call to the DASH healthcheck for integration testing
     def call_api(self):
-        url = "https://localhost:8080"
-        #r = requests.get(url)
-        #return r.text
-        return "REST api is running."
+        url = "https://dash.harvard.edu/rest/test"
+        r = requests.get(url)
+        return r.text
