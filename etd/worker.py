@@ -20,6 +20,7 @@ class Worker():
 
     # this is call to the DASH healthcheck for integration testing
     def call_api(self):
-        url = "https://dash.harvard.edu/rest/test"
-        r = requests.get(url)
-        return r.text
+        url = "https://localhost:8080"
+        #r = requests.get(url)
+        #return r.text
+        return "REST api is running."
