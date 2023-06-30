@@ -1,9 +1,17 @@
 from celery import Celery
 import os
+import json
 
 app1 = Celery('tasks')
 app1.config_from_object('celeryconfig')
 
+arguments = {"hello": "world", "feature_flags": {
+            'dash_feature_flag': "off",
+            'alma_feature_flag': "off",
+            'send_to_drs_feature_flag': "off",
+            'drs_holding_record_feature_flag': "off"}}
+json_args = json.dumps(arguments)
+
 res = app1.send_task('etd-alma-service.tasks.send_to_alma',
-                     args=[{"hello": "world"}], kwargs={},
+                     args=[json_args], kwargs={},
                      queue=os.getenv("CONSUME_QUEUE_NAME"))
