@@ -10,6 +10,7 @@ LOG_ROTATION = "midnight"
 container_id = socket.gethostname()
 timestamp = datetime.today().strftime('%Y-%m-%d')
 
+
 def configure_logger():  # pragma: no cover
     log_level = os.getenv("APP_LOG_LEVEL", "WARNING")
     log_file_path = os.getenv("LOGFILE_PATH",
