@@ -9,28 +9,37 @@ app.config_from_object('celeryconfig')
 etd.configure_logger()
 logger = logging.getLogger('etd_alma')
 
+FEATURE_FLAGS = "feature_flags"
+ALMA_FEATURE_FLAG = "alma_feature_flag"
+DASH_FEATURE_FLAG = "dash_feature_flag"
+
 
 @app.task(serializer='json', name='etd-alma-service.tasks.send_to_alma')
 def send_to_alma(message):
-    logger.info("message")
-    logger.info(message)
+    logger.debug("message")
+    logger.debug(message)
     new_message = {"hello": "from etd-alma-service"}
-    if "feature_flags" in json_message:
-        feature_flags = json_message["feature_flags"]
-        new_message["feature_flags"] = feature_flags
-        if "alma_feature_flag" in feature_flags and \
-                feature_flags["alma_feature_flag"] == "on":
-            if "dash_feature_flag" in feature_flags and \
-                    feature_flags["dash_feature_flag"] == "on":
+    if FEATURE_FLAGS in json_message:
+        feature_flags = json_message[FEATURE_FLAGS]
+        new_message[FEATURE_FLAGS] = feature_flags
+        if ALMA_FEATURE_FLAG in feature_flags and \
+                feature_flags[ALMA_FEATURE_FLAG] == "on":
+            if DASH_FEATURE_FLAG in feature_flags and \
+                    feature_flags[DASH_FEATURE_FLAG] == "on":
                 # Create Alma Record
-                print("FEATURE IS ON>>>>>CREATE ALMA RECORD")
+                logger.debug("FEATURE IS ON>>>>>CREATE ALMA RECORD")
             else:
-                print("dash_feature_flag MUST BE ON FOR THE ALMA \
+                logger.debug("dash_feature_flag MUST BE ON FOR THE ALMA \
                     HOLDING TO BE CREATED. dash_feature_flag IS SET TO OFF")
         else:
             # Feature is off so do hello world
-            print("FEATURE FLAGS FOUND")
-            print(json_message['feature_flags'])
+            logger.debug("FEATURE FLAGS FOUND")
+            logger.debug(json_message[FEATURE_FLAGS])
+
+    # If only unit testing, return the message and
+    # do not trigger the next task.
+    if "unit_test" in json_message:
+        return new_message
 
     # publish to ingested_into_alma for helloworld,
     # eventually webhooks will do that instead
