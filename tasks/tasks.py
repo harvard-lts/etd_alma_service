@@ -2,7 +2,6 @@ from celery import Celery
 import os
 import logging
 import etd
-import json
 
 app = Celery()
 app.config_from_object('celeryconfig')
@@ -15,11 +14,10 @@ DASH_FEATURE_FLAG = "dash_feature_flag"
 
 
 @app.task(serializer='json', name='etd-alma-service.tasks.send_to_alma')
-def send_to_alma(message):
+def send_to_alma(json_message):
     logger.debug("message")
-    logger.debug(message)
+    logger.debug(json_message)
     new_message = {"hello": "from etd-alma-service"}
-    json_message = json.loads(message)
     if FEATURE_FLAGS in json_message:
         feature_flags = json_message[FEATURE_FLAGS]
         new_message[FEATURE_FLAGS] = feature_flags
