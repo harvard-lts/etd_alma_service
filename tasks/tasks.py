@@ -19,6 +19,7 @@ def send_to_alma(message):
     logger.debug("message")
     logger.debug(message)
     new_message = {"hello": "from etd-alma-service"}
+    json_message = json.loads(message)
     if FEATURE_FLAGS in json_message:
         feature_flags = json_message[FEATURE_FLAGS]
         new_message[FEATURE_FLAGS] = feature_flags
