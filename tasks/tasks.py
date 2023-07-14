@@ -54,7 +54,8 @@ def send_to_alma(json_message):
             else:
                 logger.debug("dash_feature_flag MUST BE ON FOR THE ALMA \
                     HOLDING TO BE CREATED. dash_feature_flag IS SET TO OFF")
-                current_span.add_event("dash_feature_flag MUST BE ON FOR THE ALMA \
+                current_span.add_event("dash_feature_flag \
+                    MUST BE ON FOR THE ALMA \
                     HOLDING TO BE CREATED. dash_feature_flag IS SET TO OFF")
         else:
             # Feature is off so do hello world
