@@ -10,6 +10,8 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import SERVICE_NAME
+from opentelemetry.trace.propagation.tracecontext \
+    import TraceContextTextMapPropagator
 
 app = Celery()
 app.config_from_object('celeryconfig')
@@ -36,7 +38,13 @@ trace.get_tracer_provider().add_span_processor(span_processor)
 
 @app.task(serializer='json', name='etd-alma-service.tasks.send_to_alma')
 def send_to_alma(json_message):
-    with tracer.start_as_current_span("send_to_alma") as current_span:
+    traceparent = None
+    ctx = None
+    if "traceparent" in json_message:
+        carrier = {"traceparent": json_message["traceparent"]}
+        ctx = TraceContextTextMapPropagator().extract(carrier)
+    with tracer.start_as_current_span("send_to_alma", context=ctx) \
+            as current_span:
         logger.debug("message")
         logger.debug(json_message)
         new_message = {"hello": "from etd-alma-service"}
@@ -73,6 +81,11 @@ def send_to_alma(json_message):
 
         # publish to ingested_into_alma for helloworld,
         # eventually webhooks will do that instead
+        if traceparent is None:
+            carrier = {}
+            TraceContextTextMapPropagator().inject(carrier)
+            traceparent = carrier["traceparent"]
+        new_message["traceparent"] = traceparent
         current_span.add_event("to next queue")
         app.send_task("etd-alma-monitor-service.tasks.send_to_drs",
                       args=[new_message], kwargs={},
