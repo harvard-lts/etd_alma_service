@@ -15,3 +15,5 @@ class TestTasksClass():
         retval = tasks.send_to_alma(message)
         assert "hello" in retval
         assert "feature_flags" in retval
+        assert "identifier" in retval
+        assert retval["identifier"] == "30522803"
