@@ -95,6 +95,11 @@ def send_to_alma(json_message):
         logger.debug("message")
         logger.debug(json_message)
         new_message = {"hello": "from etd-alma-service"}
+        if 'identifier' in json_message:
+            proquest_identifier = json_message['identifier']
+            new_message['identifier'] = proquest_identifier
+            current_span.set_attribute("identifier", proquest_identifier)
+            logger.debug("processing id: " + str(proquest_identifier))
         if FEATURE_FLAGS in json_message:
             feature_flags = json_message[FEATURE_FLAGS]
             new_message[FEATURE_FLAGS] = feature_flags
