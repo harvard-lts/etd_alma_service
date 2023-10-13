@@ -82,12 +82,13 @@ class TestWorkerClass():
         writeMarcXml(batch, batchOutputDir, generatedMarcXmlValues, verbose)
         metsFile = batchOutputDir + "/" + batch + ".xml"
         assert os.path.exists(metsFile)
+        namespace_mapping = {'marc': 'http://www.loc.gov/MARC21/slim'}
         doc = ET.parse(metsFile)
-        assert doc.xpath("//record/datafield[@tag='100']/subfield[@code='a']")[0].text == "Peng, Yolanda Yuanlu"
-        assert doc.xpath("//record/datafield[@tag='100']/subfield[@code='c']")[0].text == "(MDes, Harvard University, 2023)"
-        assert doc.xpath("//record/datafield[@tag='245']/subfield[@code='a']")[0].text == "Naming Expeditor: Reimagining Institutional Naming System at Harvard"
-        assert doc.xpath("//record/datafield[@tag='502']/subfield[@code='a']")[0].text == "Thesis (MDes, Master in Design Studies, Department of Urban Planning and Design)--Harvard Graduate School of Design, May 2023."
-        assert doc.xpath("//record/datafield[@tag='720']/subfield[@code='a']")[0].text == "Shoshan, Malkit"
-        assert doc.xpath("//record/datafield[@tag='720']/subfield[@code='a']")[1].text == "Bruguera, Tania,"
-        assert doc.xpath("//record/datafield[@tag='720']/subfield[@code='a']")[5].text == "Claudio, Yazmin C,"
-        assert doc.xpath("//record/datafield[@tag='520']/subfield[@code='a']")[0].text == abstractText
+        assert doc.xpath("//marc:record/marc:datafield[@tag='100']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Peng, Yolanda Yuanlu"
+        assert doc.xpath("//marc:record/marc:datafield[@tag='100']/marc:subfield[@code='c']", namespaces=namespace_mapping)[0].text == "(MDes, Harvard University, 2023)"
+        assert doc.xpath("//marc:record/marc:datafield[@tag='245']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Naming Expeditor: Reimagining Institutional Naming System at Harvard"
+        assert doc.xpath("//marc:record/marc:datafield[@tag='502']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Thesis (MDes, Master in Design Studies, Department of Urban Planning and Design)--Harvard Graduate School of Design, May 2023."
+        assert doc.xpath("//marc:record/marc:datafield[@tag='720']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Shoshan, Malkit,"
+        assert doc.xpath("//marc:record/marc:datafield[@tag='720']/marc:subfield[@code='a']", namespaces=namespace_mapping)[1].text == "Bruguera, Tania,"
+        assert doc.xpath("//marc:record/marc:datafield[@tag='720']/marc:subfield[@code='a']", namespaces=namespace_mapping)[5].text == "Claudio, Yazmin C,"
+        assert doc.xpath("//marc:record/marc:datafield[@tag='520']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == abstractText
