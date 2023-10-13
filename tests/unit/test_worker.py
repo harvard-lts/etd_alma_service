@@ -100,10 +100,10 @@ class TestWorkerClass():
         verbose = False
         global generatedMarcXmlValues
         writeMarcXml(batch, batchOutputDir, generatedMarcXmlValues, verbose)
-        metsFile = batchOutputDir + "/" + batch + ".xml"
-        assert os.path.exists(metsFile)
+        marcFile = batchOutputDir + "/" + batch + ".xml"
+        assert os.path.exists(marcFile)
         namespace_mapping = {'marc': 'http://www.loc.gov/MARC21/slim'}
-        doc = ET.parse(metsFile)
+        doc = ET.parse(marcFile)
         authorXPath = "//marc:record/marc:datafield[@tag='100']" \
                       "/marc:subfield[@code='a']"
         degreeXPath = "//marc:record/marc:datafield[@tag='100']" \
