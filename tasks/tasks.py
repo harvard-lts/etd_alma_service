@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 import logging
 import etd
+from etd.worker import Worker
 import json
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
@@ -110,6 +111,9 @@ def send_to_alma(json_message):
                     logger.debug("FEATURE IS ON>>>>>CREATE ALMA RECORD")
                     current_span.add_event("FEATURE IS ON>>>>> \
                         CREATE ALMA RECORD")
+                    worker = Worker()
+                    msg = worker.send_to_alma(json_message)
+                    logger.debug(msg)
                 else:
                     logger.debug("dash_feature_flag MUST BE ON FOR THE ALMA \
                         HOLDING TO BE CREATED. dash_feature_flag \

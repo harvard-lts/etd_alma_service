@@ -1,0 +1,127 @@
+ <record>
+     <leader>00000nam a2200325 i 4500</leader>
+     <controlfield tag="006">m    |o  d        </controlfield>
+     <controlfield tag="007">cr |n|||||||||</controlfield>
+     <controlfield tag="008">YYMMDDsDATE_CREATED_VALUE    mau|||||om||| 000|0|eng|d</controlfield>
+ 
+     <datafield tag="035" ind1=" " ind2=" ">
+            <subfield code="a">(ProQuestETD)PROQUEST_IDENTIFIER_VALUE</subfield>
+     </datafield>
+ 
+     <datafield tag="040" ind1=" " ind2=" ">
+            <subfield code="a">MH</subfield>
+            <subfield code="b">eng</subfield>
+            <subfield code="e">rda</subfield>
+            <subfield code="c">MH</subfield>
+        </datafield>
+ 
+    <datafield tag="100" ind1="1" ind2=" ">
+            <subfield code="a">AUTHOR_VALUE</subfield>
+            <subfield code="c">(DEGREE_NAME_VALUE, Harvard University, DEGREE_YEAR_VALUE)</subfield>
+            <subfield code="e">author.</subfield>
+            <subfield code="1">ORCID_VALUE_URL</subfield>
+    </datafield>
+ 
+     <datafield tag="245" ind1="1" ind2="TITLE_INDICATOR_2_VALUE">
+            <subfield code="a">TITLE_VALUE</subfield>
+        </datafield>
+ 
+     <datafield tag="264" ind1=" " ind2="0">
+            <subfield code="c">DATE_CREATED_VALUE</subfield>
+        </datafield>
+ 
+     <datafield tag="300" ind1=" " ind2=" ">
+            <subfield code="a">1 online resource</subfield>
+        </datafield>
+ 
+     <datafield tag="336" ind1=" " ind2=" ">
+         <subfield code="a">text</subfield>
+         <subfield code="2">rdacontent</subfield>
+     </datafield>
+ 
+     <datafield tag="337" ind1=" " ind2=" ">
+         <subfield code="a">computer</subfield>
+         <subfield code="2">rdamedia</subfield>
+     </datafield>
+ 
+     <datafield tag="338" ind1=" " ind2=" ">
+         <subfield code="a">online resource</subfield>
+         <subfield code="2">rdacarrier</subfield>
+     </datafield>
+ 
+     <datafield tag="500" ind1=" " ind2=" ">
+         <subfield code="a">Author's ORCID: ORCID_VALUE.</subfield>
+     </datafield>
+          
+     <datafield tag="502" ind1=" " ind2=" ">
+         <subfield code="b">DEGREE_NAME_VALUE</subfield>
+         <subfield code="c">Harvard University</subfield>
+         <subfield code="d">DEGREE_YEAR_VALUE</subfield>
+     </datafield>    
+ 
+     <datafield tag="502" ind1=" " ind2=" ">
+         <subfield code="a">Thesis (DEGREE_NAME_VALUE, DEGREE_TRANSLATION_VALUE, DEPARTMENT_VALUE)--SCHOOL_VALUE, DEGREE_MONTH_VALUE DEGREE_YEAR_VALUE.</subfield>
+     </datafield>
+ 
+     <datafield tag="655" ind1=" " ind2="7">
+         <subfield code="a">Academic theses.</subfield>
+         <subfield code="2">lcgft</subfield>
+     </datafield>
+ 
+     <datafield tag="710" ind1="2" ind2=" ">
+         <subfield code="a">Harvard University</subfield>
+         <subfield code="e">degree granting institution.</subfield>
+     </datafield>
+      
+     <datafield tag="520" ind1="3" ind2=" ">
+         <subfield code="a">ABSTRACT_VALUE</subfield>
+     </datafield>
+ 
+     <datafield tag="653" ind1="0" ind2="0">
+         <subfield code="a">PQ_SUBJECT_VALUE</subfield>
+     </datafield>
+      
+     <datafield tag="653" ind1="0" ind2="0">
+         <subfield code="a">SUBJECT_VALUE</subfield>
+     </datafield>
+      
+     <datafield tag="720" ind1="1" ind2=" ">
+         <subfield code="a">ADVISOR_VALUE,</subfield>
+         <subfield code="e">thesis advisor.</subfield>
+     </datafield>
+ 
+     <datafield tag="720" ind1="1" ind2=" ">
+         <subfield code="a">COMMITTEE_MEMBER_VALUE,</subfield>
+         <subfield code="e">committee member.</subfield>
+     </datafield>
+ 
+     <datafield tag="710" ind1="2" ind2=" ">
+         <subfield code="a">SCHOOL_TRANSLATION_SUBFIELDA_VALUE.</subfield>
+         <subfield code="b">SCHOOL_TRANSLATION_SUBFIELDB_VALUE.</subfield>
+         <subfield code="t">Thesis.</subfield>
+     </datafield>
+      
+     <datafield tag="830" ind1=" " ind2="0">
+         <subfield code="a">Collections of the Harvard University Archives.</subfield>
+         <subfield code="p">DEGREE_LEVEL_TRACING_VALUE.</subfield>
+         <subfield code="5">hua</subfield>
+     </datafield>
+ 
+     <datafield tag="998" ind1=" " ind2=" ">
+         <subfield code="a">NO-OVERLAY</subfield>
+     </datafield>
+ 
+     <datafield tag="852" ind1=" " ind2=" ">
+         <subfield code="b">NET</subfield>
+         <subfield code="c">GEN</subfield>
+     </datafield>
+ 
+     <datafield tag="856" ind1="4" ind2="0">
+         <subfield code="u">DASH_LINK_VALUE</subfield>
+     </datafield>
+      
+     <datafield tag="506" ind1="1" ind2=" ">
+         <subfield code="a">Closed to research through EMBARGO_DATE_VALUE</subfield>
+     </datafield>
+          
+ </record>
