@@ -106,7 +106,7 @@ class Worker():
         r = requests.get(url)
         return r.text
 	
-    def send_to_alma(self, message):
+    def send_to_alma(self, message):  # pragma: no cover
         self.send_to_alma_worker()
         self.logger.info('complete')
         return True
