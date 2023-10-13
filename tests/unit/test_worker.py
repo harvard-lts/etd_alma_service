@@ -67,7 +67,7 @@ class TestWorkerClass():
         assert True
 
     def test_getFromMets(self, monkeypatch):
-        metsFile = "/home/etdadm/tests/data/in/"\
+        metsFile = "./tests/data/in/" \
                    "proquest2023071720-993578-gsd/mets_before.xml"
         verbose = False
         marcXmlValues = getFromMets(metsFile, verbose)
@@ -96,8 +96,7 @@ class TestWorkerClass():
 
     def test_writeMarcXml(self, monkeypatch):
         batch = "alma2023071720-993578-gsd"
-        batchOutputDir = "/home/etdadm/tests/data/in/" \
-                         "proquest2023071720-993578-gsd"
+        batchOutputDir = "./tests/data/in/proquest2023071720-993578-gsd"
         verbose = False
         global generatedMarcXmlValues
         writeMarcXml(batch, batchOutputDir, generatedMarcXmlValues, verbose)
