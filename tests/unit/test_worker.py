@@ -6,7 +6,26 @@ import lxml.etree as ET
 import os
 
 generatedMarcXmlValues = None
-abstractText = 'The "Naming Expeditor" project aims to demystify the institutional process and principles of naming, including denaming and renaming, at Harvard University. Through research on historical archives and contemporary testimonies, the project seeks to understand the meaning-constructive nature of naming as a dynamic and iterative device in the public realm. By integrating theories and practices from the realms of art and activism, the project explores alternative channels, forms, and tools to reimagine a collective naming process and system that amplifies community voices with increased awareness, democracy, and participation. The project\'s final deliverable contains an image essay analyzing the current institutional naming system at Harvard and proposing the niche and strategies of an agency named "Naming Expeditor", as well as a live performance, aiming to display the power behind the texts in the existing institutional naming system, and evoke public discussion and actions in the broader community.'
+abstractText = 'The "Naming Expeditor" project aims to demystify the ' \
+               'institutional process and principles of naming, including ' \
+               'denaming and renaming, at Harvard University. ' \
+               'Through research on historical archives and contemporary ' \
+               'testimonies, the project seeks to understand the ' \
+               'meaning-constructive nature of naming as a dynamic and ' \
+               'iterative device in the public realm. By integrating ' \
+               'theories and practices from the realms of art and activism, ' \
+               'the project explores alternative channels, forms, and tools ' \
+               'to reimagine a collective naming process and system that ' \
+               'amplifies community voices with increased awareness, ' \
+               'democracy, and participation. The project\'s final ' \
+               'deliverable contains an image essay analyzing the current ' \
+               'institutional naming system at Harvard and proposing the ' \
+               'niche and strategies of an agency named "Naming Expeditor", ' \
+               'as well as a live performance, aiming to display the power ' \
+               'behind the texts in the existing institutional naming ' \
+               'system, and evoke public discussion and actions in the '\
+               'broader community.'
+
 
 class MockResponse:
     text = "REST api is running."
@@ -44,14 +63,15 @@ class TestWorkerClass():
         msg = worker.call_api()
         assert msg != expected_msg
 
-    def test_send_to_alma(self, monkeypatch): #tbd
+    def test_send_to_alma(self, monkeypatch):  # tbd
         assert True
-    
+
     def test_getFromMets(self, monkeypatch):
-        metsFile = "/home/etdadm/tests/data/in/proquest2023071720-993578-gsd/mets_before.xml"
+        metsFile = "/home/etdadm/tests/data/in/"\
+                   "proquest2023071720-993578-gsd/mets_before.xml"
         verbose = False
         marcXmlValues = getFromMets(metsFile, verbose)
-        global generatedMarcXmlValues 
+        global generatedMarcXmlValues
         generatedMarcXmlValues = marcXmlValues
         assert marcXmlValues['proquestId'] == '30522803'
         assert marcXmlValues['author'] == 'Peng, Yolanda Yuanlu'
@@ -62,7 +82,8 @@ class TestWorkerClass():
         assert marcXmlValues['degreeLevel'] == "Master's"
         assert marcXmlValues['degreeTranslation'] == 'Master in Design Studies'
         assert marcXmlValues['school'] == 'Harvard Graduate School of Design'
-        assert marcXmlValues['department'] == 'Department of Urban Planning and Design'
+        assert marcXmlValues['department'] == 'Department of ' \
+                                              'Urban Planning and Design'
         advisors = marcXmlValues['advisors']
         assert advisors[0] == 'Shoshan, Malkit'
         committeeMembers = marcXmlValues['committeeMembers']
@@ -75,7 +96,8 @@ class TestWorkerClass():
 
     def test_writeMarcXml(self, monkeypatch):
         batch = "alma2023071720-993578-gsd"
-        batchOutputDir = "/home/etdadm/tests/data/in/proquest2023071720-993578-gsd"
+        batchOutputDir = "/home/etdadm/tests/data/in/" \
+                         "proquest2023071720-993578-gsd"
         verbose = False
         global generatedMarcXmlValues
         writeMarcXml(batch, batchOutputDir, generatedMarcXmlValues, verbose)
@@ -83,11 +105,41 @@ class TestWorkerClass():
         assert os.path.exists(metsFile)
         namespace_mapping = {'marc': 'http://www.loc.gov/MARC21/slim'}
         doc = ET.parse(metsFile)
-        assert doc.xpath("//marc:record/marc:datafield[@tag='100']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Peng, Yolanda Yuanlu"
-        assert doc.xpath("//marc:record/marc:datafield[@tag='100']/marc:subfield[@code='c']", namespaces=namespace_mapping)[0].text == "(MDes, Harvard University, 2023)"
-        assert doc.xpath("//marc:record/marc:datafield[@tag='245']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Naming Expeditor: Reimagining Institutional Naming System at Harvard"
-        assert doc.xpath("//marc:record/marc:datafield[@tag='502']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Thesis (MDes, Master in Design Studies, Department of Urban Planning and Design)--Harvard Graduate School of Design, May 2023."
-        assert doc.xpath("//marc:record/marc:datafield[@tag='720']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == "Shoshan, Malkit,"
-        assert doc.xpath("//marc:record/marc:datafield[@tag='720']/marc:subfield[@code='a']", namespaces=namespace_mapping)[1].text == "Bruguera, Tania,"
-        assert doc.xpath("//marc:record/marc:datafield[@tag='720']/marc:subfield[@code='a']", namespaces=namespace_mapping)[5].text == "Claudio, Yazmin C,"
-        assert doc.xpath("//marc:record/marc:datafield[@tag='520']/marc:subfield[@code='a']", namespaces=namespace_mapping)[0].text == abstractText
+        authorXPath = "//marc:record/marc:datafield[@tag='100']" \
+                      "/marc:subfield[@code='a']"
+        degreeXPath = "//marc:record/marc:datafield[@tag='100']" \
+                      "/marc:subfield[@code='c']"
+        titleXPath = "//marc:record/marc:datafield[@tag='245']" \
+                     "/marc:subfield[@code='a']"
+        schoolXPath = "//marc:record/marc:datafield[@tag='502']" \
+                      "/marc:subfield[@code='a']"
+        advisorXpath = "//marc:record/marc:datafield[@tag='720']" \
+                       "/marc:subfield[@code='a']"
+        abstractXPath = "//marc:record/marc:datafield[@tag='520']" \
+                        "/marc:subfield[@code='a']"
+        assert doc.xpath(authorXPath,
+                         namespaces=namespace_mapping)[0].text == \
+            "Peng, Yolanda Yuanlu"
+        assert doc.xpath(degreeXPath,
+                         namespaces=namespace_mapping)[0].text == \
+            "(MDes, Harvard University, 2023)"
+        assert doc.xpath(titleXPath, namespaces=namespace_mapping)[0].text == \
+            "Naming Expeditor: " \
+            "Reimagining Institutional Naming System at Harvard"
+        assert doc.xpath(schoolXPath,
+                         namespaces=namespace_mapping)[0].text == \
+            "Thesis (MDes, Master in Design Studies, " \
+            "Department of Urban Planning and Design)--" \
+            "Harvard Graduate School of Design, May 2023."
+        assert doc.xpath(advisorXpath,
+                         namespaces=namespace_mapping)[0].text == \
+            "Shoshan, Malkit,"
+        assert doc.xpath(advisorXpath,
+                         namespaces=namespace_mapping)[1].text == \
+            "Bruguera, Tania,"
+        assert doc.xpath(advisorXpath,
+                         namespaces=namespace_mapping)[5].text == \
+            "Claudio, Yazmin C,"
+        assert doc.xpath(abstractXPath,
+                         namespaces=namespace_mapping)[0].text == \
+            abstractText
