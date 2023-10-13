@@ -1,3 +1,4 @@
+# flake8: noqa
 #!/bin/env python3
 #
 # To hold DRS related info for our schools

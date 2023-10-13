@@ -1,3 +1,4 @@
+# flake8: noqa
 # Use this class to transfer files using sftp.
 # Multiple attempts are made for sftp operations if needed.
 # A 10 second delay is used to start with between tries.

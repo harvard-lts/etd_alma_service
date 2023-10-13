@@ -1,3 +1,4 @@
+# flake8: noqa
 # Look-up tables used by our etds2alma_pq.py script to map values found 
 # in the batch's mets file to what is used in the marcxml sent to Alma
 
