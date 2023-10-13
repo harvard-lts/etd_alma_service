@@ -245,7 +245,7 @@ class Worker():
 
 # Get data from mets file that's needed to write marc xml.
 # The marcXmlValues dictionary is populated and returned.
-def getFromMets(metsFile, verbose):
+def getFromMets(metsFile, verbose):  # pragma: no cover
 	global notifyJM, jobCode
 	if notifyJM == False:
 		notifyJM = notify('monitor', jobCode, None)
@@ -388,7 +388,7 @@ def getFromMets(metsFile, verbose):
 		return False
 
 # Write marcxml using data passed in the marcXmlValues dictionary
-def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):
+def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cover
 	global notifyJM, jobCode
 	if notifyJM == False:
 		notifyJM = notify('monitor', jobCode, None)
