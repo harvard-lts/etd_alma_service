@@ -41,7 +41,8 @@ provider.add_span_processor(span_processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
-almaMarcxmlTemplate = os.getenv('ALMA_MARCXML_TEMPLATE')
+almaMarcxmlTemplate = os.getenv('ALMA_MARCXML_TEMPLATE',
+								"../templates/alma_marcxml_template.xml")
 dropboxUser         = os.getenv('DROPBOX_USER')
 dropboxServer       = os.getenv('DROPBOX_SERVER')
 privateKey          = os.getenv('PRIVATE_KEY_PATH')
