@@ -3,7 +3,6 @@ from etd.worker import getFromMets
 from etd.worker import writeMarcXml
 import requests
 import lxml.etree as ET
-import shutil
 import os
 
 generatedMarcXmlValues = None
