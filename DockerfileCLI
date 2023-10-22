@@ -1,0 +1,17 @@
+FROM python:3.11-slim-buster
+
+COPY requirements.txt /tmp/
+
+RUN apt-get update && apt-get install -y libpq-dev gcc python-dev && \
+  pip install --upgrade pip && \
+  pip install --upgrade --force-reinstall -r /tmp/requirements.txt -i https://pypi.org/simple/ --extra-index-url https://test.pypi.org/simple/
+
+COPY ./ /app 
+
+WORKDIR /work
+
+ENV JAEGER_SERVICE_NAME "not-used"
+ENV ALMA_MARCXML_TEMPLATE "/app/templates/alma_marcxml_template.xml"
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+ENTRYPOINT ["/usr/local/bin/python3", "/app/main.py"]
+#CMD ["sh", "-c", "cd /work && bash"]
