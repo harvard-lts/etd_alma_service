@@ -60,7 +60,7 @@
      </datafield>    
  
      <datafield tag="502" ind1=" " ind2=" ">
-         <subfield code="a">Thesis (DEGREE_NAME_VALUE, DEGREE_TRANSLATION_VALUE, DEPARTMENT_VALUE)--SCHOOL_VALUE, DEGREE_MONTH_VALUE DEGREE_YEAR_VALUE.</subfield>
+         <subfield code="a">Thesis (DEGREE_NAME_VALUE, DEGREE_TRANSLATION_VALUE, DEPARTMENT_VALUE) -- SCHOOL_VALUE, DEGREE_MONTH_VALUE DEGREE_YEAR_VALUE.</subfield>
      </datafield>
  
      <datafield tag="655" ind1=" " ind2="7">
@@ -107,21 +107,37 @@
          <subfield code="5">hua</subfield>
      </datafield>
  
-     <datafield tag="998" ind1=" " ind2=" ">
-         <subfield code="a">NO-OVERLAY</subfield>
-     </datafield>
- 
      <datafield tag="852" ind1=" " ind2=" ">
          <subfield code="b">NET</subfield>
-         <subfield code="c">GEN</subfield>
+         <subfield code="c">ETD</subfield>
      </datafield>
  
      <datafield tag="856" ind1="4" ind2="0">
          <subfield code="u">DASH_LINK_VALUE</subfield>
      </datafield>
+
+     <datafield tag="852" ind1=" " ind2=" ">
+         <subfield code="b">LIB_CODE_3_CHAR</subfield>
+         <subfield code="c">GEN</subfield>
+         <subfield code="z">Deposit in process</subfield>
+     </datafield> 
       
      <datafield tag="506" ind1="1" ind2=" ">
          <subfield code="a">Closed to research through EMBARGO_DATE_VALUE</subfield>
      </datafield>
+
+     <datafield tag="506" ind1="0" ind2=" ">
+         <subfield code="a">Contact the Harvard University Archives about on-site viewing or obtaining a copy.</subfield>
+     </datafield>
+
+     <datafield tag="583" ind1="1" ind2=" ">
+         <subfield code="j">Harvard University Library</subfield>
+            <subfield code="l">committed to preserve</subfield>
+         <subfield code="5">MH</subfield>
+    </datafield>
+
+    <datafield tag="909" ind1=" " ind2=" ">
+        <subfield code="k">netLIB_CODE_3_CHAR</subfield>
+     </datafield> 
           
  </record>

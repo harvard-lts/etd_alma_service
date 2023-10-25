@@ -52,25 +52,25 @@ degreeLevelTracing = {
 # of the 710 datafield. Also used to set if degree level tracing is used.
 schools = {
 	'Harvard Business School':
-		{'subfield_a': 'Harvard Business School', 'subfield_b': False, 'degree_level_tracing': False},
+		{'subfield_a': 'Harvard Business School', 'subfield_b': False, 'degree_level_tracing': False, 'lib_code_3_char': 'BAK'},
 	'Harvard College':
-		{'subfield_a': 'Harvard College (1780- )', 'subfield_b': False, 'degree_level_tracing': True},
+		{'subfield_a': 'Harvard College (1780- )', 'subfield_b': False, 'degree_level_tracing': True, 'lib_code_3_char': 'HUA'},
 	'Harvard Divinity School':
-		{'subfield_a': 'Harvard Divinity School', 'subfield_b': False, 'degree_level_tracing': True},
+		{'subfield_a': 'Harvard Divinity School', 'subfield_b': False, 'degree_level_tracing': True, 'lib_code_3_char': 'HUA'},
 	'Harvard Graduate School of Design': 
-		{'subfield_a': 'Harvard University' , 'subfield_b': 'Graduate School of Design', 'degree_level_tracing': False},
+		{'subfield_a': 'Harvard University' , 'subfield_b': 'Graduate School of Design', 'degree_level_tracing': False, 'lib_code_3_char': 'DES'},
 	'Harvard Medical School':
-		{'subfield_a': 'Harvard Medical School' , 'subfield_b': False, 'degree_level_tracing': False},
+		{'subfield_a': 'Harvard Medical School' , 'subfield_b': False, 'degree_level_tracing': False, 'lib_code_3_char': 'MED'},
 	'Harvard T.H. Chan School of Public Health':
-		{'subfield_a': 'Harvard T.H. Chan School of Public Health' , 'subfield_b': False, 'degree_level_tracing': False},
+		{'subfield_a': 'Harvard T.H. Chan School of Public Health' , 'subfield_b': False, 'degree_level_tracing': False, 'lib_code_3_char': 'MED'},
 	'Harvard University Division of Continuing Education':
-		{'subfield_a': 'Harvard University' , 'subfield_b': 'Continuing Education Division', 'degree_level_tracing': True},
+		{'subfield_a': 'Harvard University' , 'subfield_b': 'Continuing Education Division', 'degree_level_tracing': True, 'lib_code_3_char': 'HUA'},
 	'Harvard University Engineering and Applied Sciences':
-		{'subfield_a': 'Harvard College (1780- )' , 'subfield_b': False, 'degree_level_tracing': True},
+		{'subfield_a': 'Harvard College (1780- )' , 'subfield_b': False, 'degree_level_tracing': True, 'lib_code_3_char': 'HUA'},
 	'Harvard University Graduate School of Arts and Sciences':
-		{'subfield_a': 'Harvard University' , 'subfield_b': 'Graduate School of Arts and Sciences', 'degree_level_tracing': True},
+		{'subfield_a': 'Harvard University' , 'subfield_b': 'Graduate School of Arts and Sciences', 'degree_level_tracing': True, 'lib_code_3_char': 'HUA'},
 	'Harvard University Graduate School of Education':
-		{'subfield_a': 'Harvard University' , 'subfield_b': 'Graduate School of Education', 'degree_level_tracing': True},
+		{'subfield_a': 'Harvard University' , 'subfield_b': 'Graduate School of Education', 'degree_level_tracing': True, 'lib_code_3_char': 'HUA'},
 	'Harvard University School of Dental Medicine':
-		{'subfield_a': 'Harvard School of Dental Medicine' , 'subfield_b': False, 'degree_level_tracing': False}
+		{'subfield_a': 'Harvard School of Dental Medicine' , 'subfield_b': False, 'degree_level_tracing': False, 'lib_code_3_char': 'MED'}
 }
