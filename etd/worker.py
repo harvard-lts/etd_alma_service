@@ -635,6 +635,20 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 						else:
 							removeNodes.add(parent)
 
+				# Datafield 852
+				elif parent.attrib['tag'] == '852':
+					if 'dash_id' in marcXmlValues: # print NET/ETD if there is a dash id
+						if child.attrib['code'] == 'b' and child.text == 'NET':
+							pass
+						elif child.attrib['code'] == 'b' and child.text == 'LIB_CODE_3_CHAR':
+							removeNodes.add(parent)
+					else: # print LIB_CODE_3_CHAR if there is no dash id
+						if child.attrib['code'] == 'b' and child.text == 'LIB_CODE_3_CHAR':
+							childText  = child.text.replace('LIB_CODE_3_CHAR', schools[marcXmlValues['school']]['lib_code_3_char'])
+							child.text = childText
+						elif child.attrib['code'] == 'b' and child.text == 'NET':
+							removeNodes.add(parent)
+
 				# Datafield 856, Dash link
 				# Remove element if a Dash ID was not found
 				elif parent.attrib['tag'] == '856':
@@ -648,12 +662,36 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 				# Datafield 506, embargo date
 				# Remove element if embargo date is not found
 				elif parent.attrib['tag'] == '506':
-					if child.attrib['code'] == 'a':
+					if 'dash_id' not in marcXmlValues:
 						if 'embargoDate' in marcXmlValues:
-							childText  = child.text.replace('EMBARGO_DATE_VALUE', marcXmlValues['embargoDate'])
-							child.text = childText
-						else:
-							removeNodes.add(parent)
+							if child.attrib['code'] == 'a' and parent.attrib['ind1'] == '1':
+								childText  = child.text.replace('EMBARGO_DATE_VALUE', marcXmlValues['embargoDate'])
+								child.text = childText
+							else:
+								removeNodes.add(parent)
+						else: 
+							if child.attrib['code'] == 'a' and parent.attrib['ind1'] == '0':
+								pass
+							else:
+								removeNodes.add(parent)
+					else:
+						removeNodes.add(parent)
+
+				# Datafield 583 field ONLY if there is an 852 LIB_CODE_3_CHAR/GEN
+				elif parent.attrib['tag'] == '583':
+					if 'dash_id' not in marcXmlValues:
+						pass
+					else:
+						removeNodes.add(parent)
+
+				# Datafield 909, proquest id
+				elif parent.attrib['tag'] == '909':
+					if child.attrib['code'] == 'k':
+						childText  = child.text.replace('LIB_CODE_3_CHAR', schools[marcXmlValues['school']]['lib_code_3_char'])
+						child.text = childText
+					else:
+						removeNodes.add(parent)
+
 
 	# Remove any node that need to be removed
 	if len(removeNodes) > 0:

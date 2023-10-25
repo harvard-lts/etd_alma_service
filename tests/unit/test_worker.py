@@ -73,6 +73,7 @@ class TestWorkerClass():
         marcXmlValues = getFromMets(metsFile, verbose)
         global generatedMarcXmlValues
         generatedMarcXmlValues = marcXmlValues
+        generatedMarcXmlValues['dash_id'] = '993578'
         assert marcXmlValues['proquestId'] == '30522803'
         assert marcXmlValues['author'] == 'Peng, Yolanda Yuanlu'
         assert marcXmlValues['title'] == 'Naming Expeditor: Reimagining ' \
@@ -116,6 +117,8 @@ class TestWorkerClass():
                        "/marc:subfield[@code='a']"
         abstractXPath = "//marc:record/marc:datafield[@tag='520']" \
                         "/marc:subfield[@code='a']"
+        dashXpath = "//marc:record/marc:datafield[@tag='856']" \
+                    "/marc:subfield[@code='u']"
         assert doc.xpath(authorXPath,
                          namespaces=namespace_mapping)[0].text == \
             "Peng, Yolanda Yuanlu"
@@ -128,7 +131,7 @@ class TestWorkerClass():
         assert doc.xpath(schoolXPath,
                          namespaces=namespace_mapping)[0].text == \
             "Thesis (MDes, Master in Design Studies, " \
-            "Department of Urban Planning and Design)--" \
+            "Department of Urban Planning and Design) -- " \
             "Harvard Graduate School of Design, May 2023."
         assert doc.xpath(advisorXpath,
                          namespaces=namespace_mapping)[0].text == \
@@ -142,3 +145,6 @@ class TestWorkerClass():
         assert doc.xpath(abstractXPath,
                          namespaces=namespace_mapping)[0].text == \
             abstractText
+        assert doc.xpath(dashXpath,
+                         namespaces=namespace_mapping)[0].text == \
+            "https://nrs.harvard.edu/urn-3:HUL.InstRepos:993578"
