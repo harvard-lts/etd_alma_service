@@ -79,7 +79,9 @@ xmlStartCollection = """
 
 xmlEndCollection = "</collection>"
 
-
+FEATURE_FLAGS = "feature_flags"
+ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
+ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
 
 """
 This the worker class for the etd alma service.
@@ -106,14 +108,25 @@ class Worker():
         r = requests.get(url)
         return r.text
 	
+    @tracer.start_as_current_span("send_to_alma")
     def send_to_alma(self, message):  # pragma: no cover
-        self.send_to_alma_worker()
+        force = False
+        verbose = False
+        if FEATURE_FLAGS in message:
+            feature_flags = message[FEATURE_FLAGS]
+            if (ALMA_FEATURE_FORCE_UPDATE_FLAG in feature_flags and
+                feature_flags[ALMA_FEATURE_FORCE_UPDATE_FLAG] == "on"):
+                force = True
+            if (ALMA_FEATURE_VERBOSE_FLAG in feature_flags and
+                feature_flags[ALMA_FEATURE_VERBOSE_FLAG] == "on"):
+                verbose = True
+        self.send_to_alma_worker(force, verbose)
         self.logger.info('complete')
         return True
 		
-    @tracer.start_as_current_span("send_to_alma")
-    def send_to_alma_worker(self, inputFile = False, batch = False, school = False,
-                     force = False, verbose = False):  # pragma: no cover
+    @tracer.start_as_current_span("send_to_alma_worker")
+    def send_to_alma_worker(self, force = False,
+							verbose = False):  # pragma: no cover
         current_span = trace.get_current_span()
         current_span.add_event("sending to alma")
         global notifyJM
@@ -127,19 +140,13 @@ class Worker():
         notifyJM.log('pass', 'Process ETDs from Proquest to Alma', verbose)
         notifyJM.report('start')
 
-	    # Build batchesIn list of lists using input file
+	    # Build batchesIn by looking at the data directory
         batchesIn = []
-        if inputFile:
-            with open(inputFile) as input:
-                for line in input:
-                    line = line.strip()
-                    (school, batch) = line.split(',')
-#-				batchesIn.append({'school': school, 'batch': batch})
-                    batchesIn.append([school, batch])
-
-        # Or from passed in arguments
-        else:
-            batchesIn.append([school, batch])
+        for batch in os.listdir(dataDir + '/in'):
+          schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', batch)
+          if schoolMatch:
+              school = schoolMatch.group(1)
+              batchesIn.append([school, batch])
 
         # Start xml record collection output file
         xmlCollectionOut = open(xmlCollectionFile, 'w')
@@ -158,6 +165,8 @@ class Worker():
                     for line in alreadyRunTable:
                         if f'Alma {batch} {school}' == line.rstrip():
                             notifyJM.log('fail', 'Batch has already been run. Use --force to re-run.', True)
+                            current_span.set_status(Status(StatusCode.ERROR))
+                            current_span.add_event('Batch has already been run. Use force flag to re-run.')
                             continue
 
             # Let the Job Monitor know that the job has started
