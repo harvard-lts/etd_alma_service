@@ -158,8 +158,8 @@ class Worker():
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
 
         # Process batches
+        recordsWereUpdated = False
         for (school, batch) in batchesIn:
-            recordWasUpdated = False
             batchOutDir      = f'{dataDir}/out/{batch}'
             variableOutFile  = f'{batchOutDir}/variables.py'
 
@@ -243,6 +243,7 @@ class Worker():
             with open(variableOutFile, 'w') as variablesOut:
                 variablesOut.write(f'marcXmlValues = {marcXmlValues}\n')
 
+            recordsWereUpdated = True
             # Otherwise, remove file
         else:
             xmlCollectionOut.close()
@@ -253,7 +254,7 @@ class Worker():
         current_span.add_event("completed")
 	
         # Returns True if records were updated, otherwise, return False
-        return recordWasUpdated
+        return recordsWereUpdated
     
 
 # Get data from mets file that's needed to write marc xml.
