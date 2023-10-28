@@ -32,6 +32,7 @@ from lib.notify import notify
 # tracing setup
 JAEGER_NAME = os.getenv('JAEGER_NAME')
 JAEGER_SERVICE_NAME = os.getenv('JAEGER_SERVICE_NAME')
+notify.logDir = os.getenv("LOGFILE_PATH", "/home/etdadm/logs/etd_alma")
 
 resource = Resource(attributes={SERVICE_NAME: JAEGER_SERVICE_NAME})
 provider = TracerProvider(resource=resource)
@@ -108,7 +109,7 @@ class Worker():
         r = requests.get(url)
         return r.text
 	
-    @tracer.start_as_current_span("send_to_alma")
+    @tracer.start_as_current_span("send_to_alma_worker")
     def send_to_alma(self, message):  # pragma: no cover
         force = False
         verbose = False
@@ -120,15 +121,18 @@ class Worker():
             if (ALMA_FEATURE_VERBOSE_FLAG in feature_flags and
                 feature_flags[ALMA_FEATURE_VERBOSE_FLAG] == "on"):
                 verbose = True
+        current_span = trace.get_current_span()
+        current_span.add_event("sending to alma worker main")
+        self.logger.info('sending to alma worker main')
         self.send_to_alma_worker(force, verbose)
         self.logger.info('complete')
         return True
 		
-    @tracer.start_as_current_span("send_to_alma_worker")
+    @tracer.start_as_current_span("send_to_alma_worker_main")
     def send_to_alma_worker(self, force = False,
 							verbose = False):  # pragma: no cover
         current_span = trace.get_current_span()
-        current_span.add_event("sending to alma")
+        current_span.add_event("sending to alma dropbox")
         global notifyJM
         wroteXmlRecords = False
 
