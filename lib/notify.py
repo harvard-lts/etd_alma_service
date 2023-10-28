@@ -138,7 +138,7 @@ class notify: # pragma: no cover
 				statusCode = 'COMPLETED_' + statusCode
 
 		# Print and report status result as specified
-		if 'monitor' in self.notifyMethod: self.notifyJM(self.jobCode, statusCode, message)
+		if 'monitor' in self.notifyMethod: self.notifyJM(self.jobCode, statusCode, message, noRetries = True)
 		if echo:
 			print(statusMsg)
 			print(message)
