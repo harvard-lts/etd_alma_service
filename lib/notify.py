@@ -248,7 +248,7 @@ class notify: # pragma: no cover
 
 		dateStamp = get_date_time_stamp()
 		logFile = f'{logDir}/{jobCode}{dateStamp}'
-		with open(logFile, 'w') as log:
+		with open(logFile, 'w+') as log:
 			log.write(message)
 			
 		hostname = getfqdn()
