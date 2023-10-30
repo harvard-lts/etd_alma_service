@@ -163,6 +163,7 @@ class Worker():
         for (school, batch) in batchesIn:
             batchOutDir      = f'{dataDir}/out/{batch}'
             variableOutFile  = f'{batchOutDir}/variables.py'
+            skipBatch = False
 
             # Do not re-run a processed batch unless forced #- test
             if ((not force) and (os.path.exists(alreadyRunRef))):
@@ -172,8 +173,10 @@ class Worker():
                             notifyJM.log('fail', 'Batch has already been run. Use --force to re-run.', True)
                             current_span.set_status(Status(StatusCode.ERROR))
                             current_span.add_event('Batch has already been run. Use force flag to re-run.')
+                            skipBatch = True
                             continue
-
+            if skipBatch:
+                continue
             # Let the Job Monitor know that the job has started
             notifyJM.log('pass', f'Process batch {batch} for school {school}', verbose)
 
