@@ -11,4 +11,4 @@ arguments = {"hello": "world", "feature_flags": {
 
 res = app1.send_task('etd-alma-service.tasks.send_to_alma',
                      args=[arguments], kwargs={},
-                     queue="etd_in_storage")
+                     queue=os.getenv("CONSUME_QUEUE_NAME"))
