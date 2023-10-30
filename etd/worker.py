@@ -159,12 +159,13 @@ class Worker():
 
         # Process batches
         recordsWereUpdated = False
+        numRecordsUpdated = 0
         for (school, batch) in batchesIn:
             batchOutDir      = f'{dataDir}/out/{batch}'
             variableOutFile  = f'{batchOutDir}/variables.py'
 
             # Do not re-run a processed batch unless forced #- test
-            if not force:
+            if ((not force) and (os.path.exists(alreadyRunRef))):
                 with open(alreadyRunRef, 'r') as alreadyRunTable:
                     for line in alreadyRunTable:
                         if f'Alma {batch} {school}' == line.rstrip():
@@ -230,8 +231,17 @@ class Worker():
 
                 if xfer.error:
                     notifyJM.log('fail', xfer.error, True)
+                    current_span.set_status(Status(StatusCode.ERROR))
+                    current_span.add_event(xfer.error)
+                    self.logger.error(xfer.error)
                 else:
                     notifyJM.log('pass', f'{xmlCollectionFile} was sent to {dropboxUser}@{dropboxServer}:{targetFile}', verbose)
+                    current_span.set_attribute("uploaded_identifier", marcXmlValues['proquestId'])
+                    current_span.set_attribute("uploaded_file", targetFile)
+                    current_span.add_event(f'{xmlCollectionFile} was sent to {dropboxUser}@{dropboxServer}:{targetFile}')
+                    self.logger.debug("uploaded proquest id: " + str(marcXmlValues['proquestId']))
+                    self.logger.debug("uploaded file: " + str(targetFile))
+                    numRecordsUpdated += 1
 
             xfer.close()
 
@@ -249,7 +259,12 @@ class Worker():
             xmlCollectionOut.close()
             os.remove(xmlCollectionFile)
             notifyJM.log('pass', 'No record to send to Alma', verbose)
+            current_span.add_event("No record to send to Alma")
+            self.logger.debug("No record to send to Alma")
 
+        current_span.add_event(f'{numRecordsUpdated} records were updated')
+        self.logger.debug(f'{numRecordsUpdated} records were updated')
+        notifyJM.log('pass', f'{numRecordsUpdated} records were updated', verbose)
         notifyJM.report('complete')
         current_span.add_event("completed")
 	
