@@ -215,6 +215,7 @@ class Worker():
                 if marcXmlRecord:
                     xmlCollectionOut.write(marcXmlRecord)
                     wroteXmlRecords = True
+                    numRecordsUpdated = numRecordsUpdated + 1                  
 
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
@@ -244,7 +245,6 @@ class Worker():
                     current_span.add_event(f'{xmlCollectionFile} was sent to {dropboxUser}@{dropboxServer}:{targetFile}')
                     self.logger.debug("uploaded proquest id: " + str(marcXmlValues['proquestId']))
                     self.logger.debug("uploaded file: " + str(targetFile))
-                    numRecordsUpdated += 1
 
             xfer.close()
 
