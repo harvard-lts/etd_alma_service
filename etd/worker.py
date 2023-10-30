@@ -32,6 +32,7 @@ from lib.notify import notify
 # tracing setup
 JAEGER_NAME = os.getenv('JAEGER_NAME')
 JAEGER_SERVICE_NAME = os.getenv('JAEGER_SERVICE_NAME')
+notify.logDir = os.getenv("LOGFILE_PATH", "/home/etdadm/logs/etd_alma")
 
 resource = Resource(attributes={SERVICE_NAME: JAEGER_SERVICE_NAME})
 provider = TracerProvider(resource=resource)
@@ -79,7 +80,9 @@ xmlStartCollection = """
 
 xmlEndCollection = "</collection>"
 
-
+FEATURE_FLAGS = "feature_flags"
+ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
+ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
 
 """
 This the worker class for the etd alma service.
@@ -106,16 +109,30 @@ class Worker():
         r = requests.get(url)
         return r.text
 	
+    @tracer.start_as_current_span("send_to_alma_worker")
     def send_to_alma(self, message):  # pragma: no cover
-        self.send_to_alma_worker()
+        force = False
+        verbose = False
+        if FEATURE_FLAGS in message:
+            feature_flags = message[FEATURE_FLAGS]
+            if (ALMA_FEATURE_FORCE_UPDATE_FLAG in feature_flags and
+                feature_flags[ALMA_FEATURE_FORCE_UPDATE_FLAG] == "on"):
+                force = True
+            if (ALMA_FEATURE_VERBOSE_FLAG in feature_flags and
+                feature_flags[ALMA_FEATURE_VERBOSE_FLAG] == "on"):
+                verbose = True
+        current_span = trace.get_current_span()
+        current_span.add_event("sending to alma worker main")
+        self.logger.info('sending to alma worker main')
+        self.send_to_alma_worker(force, verbose)
         self.logger.info('complete')
         return True
 		
-    @tracer.start_as_current_span("send_to_alma")
-    def send_to_alma_worker(self, inputFile = False, batch = False, school = False,
-                     force = False, verbose = False):  # pragma: no cover
+    @tracer.start_as_current_span("send_to_alma_worker_main")
+    def send_to_alma_worker(self, force = False,
+							verbose = False):  # pragma: no cover
         current_span = trace.get_current_span()
-        current_span.add_event("sending to alma")
+        current_span.add_event("sending to alma dropbox")
         global notifyJM
         wroteXmlRecords = False
 
@@ -127,19 +144,13 @@ class Worker():
         notifyJM.log('pass', 'Process ETDs from Proquest to Alma', verbose)
         notifyJM.report('start')
 
-	    # Build batchesIn list of lists using input file
+	    # Build batchesIn by looking at the data directory
         batchesIn = []
-        if inputFile:
-            with open(inputFile) as input:
-                for line in input:
-                    line = line.strip()
-                    (school, batch) = line.split(',')
-#-				batchesIn.append({'school': school, 'batch': batch})
-                    batchesIn.append([school, batch])
-
-        # Or from passed in arguments
-        else:
-            batchesIn.append([school, batch])
+        for batch in os.listdir(dataDir + '/in'):
+          schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', batch)
+          if schoolMatch:
+              school = schoolMatch.group(1)
+              batchesIn.append([school, batch])
 
         # Start xml record collection output file
         xmlCollectionOut = open(xmlCollectionFile, 'w')
@@ -147,19 +158,25 @@ class Worker():
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
 
         # Process batches
+        recordsWereUpdated = False
+        numRecordsUpdated = 0
         for (school, batch) in batchesIn:
-            recordWasUpdated = False
             batchOutDir      = f'{dataDir}/out/{batch}'
             variableOutFile  = f'{batchOutDir}/variables.py'
+            skipBatch = False
 
             # Do not re-run a processed batch unless forced #- test
-            if not force:
+            if ((not force) and (os.path.exists(alreadyRunRef))):
                 with open(alreadyRunRef, 'r') as alreadyRunTable:
                     for line in alreadyRunTable:
                         if f'Alma {batch} {school}' == line.rstrip():
                             notifyJM.log('fail', 'Batch has already been run. Use --force to re-run.', True)
+                            current_span.set_status(Status(StatusCode.ERROR))
+                            current_span.add_event('Batch has already been run. Use force flag to re-run.')
+                            skipBatch = True
                             continue
-
+            if skipBatch:
+                continue
             # Let the Job Monitor know that the job has started
             notifyJM.log('pass', f'Process batch {batch} for school {school}', verbose)
 
@@ -217,8 +234,17 @@ class Worker():
 
                 if xfer.error:
                     notifyJM.log('fail', xfer.error, True)
+                    current_span.set_status(Status(StatusCode.ERROR))
+                    current_span.add_event(xfer.error)
+                    self.logger.error(xfer.error)
                 else:
                     notifyJM.log('pass', f'{xmlCollectionFile} was sent to {dropboxUser}@{dropboxServer}:{targetFile}', verbose)
+                    current_span.set_attribute("uploaded_identifier", marcXmlValues['proquestId'])
+                    current_span.set_attribute("uploaded_file", targetFile)
+                    current_span.add_event(f'{xmlCollectionFile} was sent to {dropboxUser}@{dropboxServer}:{targetFile}')
+                    self.logger.debug("uploaded proquest id: " + str(marcXmlValues['proquestId']))
+                    self.logger.debug("uploaded file: " + str(targetFile))
+                    numRecordsUpdated += 1
 
             xfer.close()
 
@@ -230,17 +256,23 @@ class Worker():
             with open(variableOutFile, 'w') as variablesOut:
                 variablesOut.write(f'marcXmlValues = {marcXmlValues}\n')
 
+            recordsWereUpdated = True
             # Otherwise, remove file
         else:
             xmlCollectionOut.close()
             os.remove(xmlCollectionFile)
             notifyJM.log('pass', 'No record to send to Alma', verbose)
+            current_span.add_event("No record to send to Alma")
+            self.logger.debug("No record to send to Alma")
 
+        current_span.add_event(f'{numRecordsUpdated} records were updated')
+        self.logger.debug(f'{numRecordsUpdated} records were updated')
+        notifyJM.log('pass', f'{numRecordsUpdated} records were updated', verbose)
         notifyJM.report('complete')
         current_span.add_event("completed")
 	
         # Returns True if records were updated, otherwise, return False
-        return recordWasUpdated
+        return recordsWereUpdated
     
 
 # Get data from mets file that's needed to write marc xml.

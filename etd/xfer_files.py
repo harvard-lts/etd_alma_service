@@ -31,8 +31,8 @@ class xfer_files(Connection):  # pragma: no cover
                                  private_key=privateKey, port=sshPort)
                 self.error = False
             except Exception as e:
-                self.error = 'Key login failed: %s@%s' % \
-                    (self.remoteUser, self.remoteSite)
+                self.error = 'Key login failed: %s@%s : %s' % \
+                    (self.remoteUser, self.remoteSite, e)
                 print("CANT LOGIN ----")
                 print(e)
                 return None

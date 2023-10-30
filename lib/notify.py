@@ -26,7 +26,7 @@ libDir = os.path.dirname(os.path.realpath(__file__))
 
 # Find and load any of our modules that we need
 commonBin = libDir.replace('lib', 'bin')
-logDir    = libDir.replace('lib', 'log')
+logDir    = os.getenv("LOGFILE_PATH", "/home/etdadm/logs/etd_alma")
 sys.path.append(commonBin)
 from .ltstools import adminMailTo, adminMailFrom, get_date_time_stamp, jobMonitor, send_mail
 
@@ -138,7 +138,7 @@ class notify: # pragma: no cover
 				statusCode = 'COMPLETED_' + statusCode
 
 		# Print and report status result as specified
-		if 'monitor' in self.notifyMethod: self.notifyJM(self.jobCode, statusCode, message)
+		if 'monitor' in self.notifyMethod: self.notifyJM(self.jobCode, statusCode, message, noRetries = True)
 		if echo:
 			print(statusMsg)
 			print(message)
@@ -248,7 +248,7 @@ class notify: # pragma: no cover
 
 		dateStamp = get_date_time_stamp()
 		logFile = f'{logDir}/{jobCode}{dateStamp}'
-		with open(logFile, 'w') as log:
+		with open(logFile, 'w+') as log:
 			log.write(message)
 			
 		hostname = getfqdn()
