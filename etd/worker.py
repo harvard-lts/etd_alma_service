@@ -170,9 +170,9 @@ class Worker():
                 with open(alreadyRunRef, 'r') as alreadyRunTable:
                     for line in alreadyRunTable:
                         if f'Alma {batch} {school}' == line.rstrip():
-                            notifyJM.log('fail', 'Batch has already been run. Use --force to re-run.', True)
+                            notifyJM.log('fail', f'Batch {batch} has already been run. Use force flag to re-run.', True)
                             current_span.set_status(Status(StatusCode.ERROR))
-                            current_span.add_event('Batch has already been run. Use force flag to re-run.')
+                            current_span.add_event(f'Batch {batch} has already been run. Use force flag to re-run.')
                             skipBatch = True
                             continue
             if skipBatch:
@@ -215,7 +215,10 @@ class Worker():
                 if marcXmlRecord:
                     xmlCollectionOut.write(marcXmlRecord)
                     wroteXmlRecords = True
-                    numRecordsUpdated = numRecordsUpdated + 1                  
+                    numRecordsUpdated = numRecordsUpdated + 1
+                    # Update processed reference file
+                    with open(alreadyRunRef, 'a+') as alreadyRunFile:
+                        alreadyRunFile.write(f'Alma {batch} {school}\n')                  
 
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
@@ -247,10 +250,6 @@ class Worker():
                     self.logger.debug("uploaded file: " + str(targetFile))
 
             xfer.close()
-
-            # Update processed reference file
-            with open(alreadyRunRef, 'a+') as alreadyRunFile:
-                alreadyRunFile.write(f'Alma {batch} {school}\n')
 
             # Store our marc xml variables
             with open(variableOutFile, 'w') as variablesOut:
