@@ -159,7 +159,7 @@ class Worker():
 
         # Start xml record collection output file
         if integration_test:
-            xmlCollectionFile = f'{dataDir}/out/AlmaDeliveryTest_{yyyymmdd}.xml'
+            xmlCollectionFile = f'AlmaDeliveryTest_{yyyymmdd}.xml'
         xmlCollectionOut = open(xmlCollectionFile, 'w')
         xmlCollectionOut.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
