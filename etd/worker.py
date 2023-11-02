@@ -83,6 +83,7 @@ xmlEndCollection = "</collection>"
 FEATURE_FLAGS = "feature_flags"
 ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
 ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
+INTEGRATION_TEST = "integration_test"
 
 """
 This the worker class for the etd alma service.
@@ -113,6 +114,7 @@ class Worker():
     def send_to_alma(self, message):  # pragma: no cover
         force = False
         verbose = False
+        integration_test = False
         if FEATURE_FLAGS in message:
             feature_flags = message[FEATURE_FLAGS]
             if (ALMA_FEATURE_FORCE_UPDATE_FLAG in feature_flags and
@@ -121,16 +123,19 @@ class Worker():
             if (ALMA_FEATURE_VERBOSE_FLAG in feature_flags and
                 feature_flags[ALMA_FEATURE_VERBOSE_FLAG] == "on"):
                 verbose = True
+        if (INTEGRATION_TEST in feature_flags and
+            feature_flags[INTEGRATION_TEST] == True):
+            integration_test = True
         current_span = trace.get_current_span()
         current_span.add_event("sending to alma worker main")
         self.logger.info('sending to alma worker main')
-        self.send_to_alma_worker(force, verbose)
+        self.send_to_alma_worker(force, verbose, integration_test)
         self.logger.info('complete')
         return True
 		
     @tracer.start_as_current_span("send_to_alma_worker_main")
     def send_to_alma_worker(self, force = False,
-							verbose = False):  # pragma: no cover
+							verbose = False, integration_test = False):  # pragma: no cover
         current_span = trace.get_current_span()
         current_span.add_event("sending to alma dropbox")
         global notifyJM
@@ -153,6 +158,8 @@ class Worker():
               batchesIn.append([school, batch])
 
         # Start xml record collection output file
+        if integration_test:
+            xmlCollectionFile = f'{dataDir}/out/AlmaDeliveryTest_{yyyymmdd}.xml'
         xmlCollectionOut = open(xmlCollectionFile, 'w')
         xmlCollectionOut.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
@@ -217,8 +224,9 @@ class Worker():
                     wroteXmlRecords = True
                     numRecordsUpdated = numRecordsUpdated + 1
                     # Update processed reference file
-                    with open(alreadyRunRef, 'a+') as alreadyRunFile:
-                        alreadyRunFile.write(f'Alma {batch} {school}\n')                  
+                    if not integration_test:
+                        with open(alreadyRunRef, 'a+') as alreadyRunFile:					
+                            alreadyRunFile.write(f'Alma {batch} {school}\n')                  
 
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
