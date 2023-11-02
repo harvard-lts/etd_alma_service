@@ -62,7 +62,7 @@ metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
 
 yyyymmdd          = get_date_time_stamp('day')
 yymmdd            = yyyymmdd[2:]
-xmlCollectionFile = f'AlmaDelivery_{yyyymmdd}.xml'
+xmlCollectionFileName = f'AlmaDelivery_{yyyymmdd}.xml'
 
 reTheTitle = re.compile('"?(the) .*', re.IGNORECASE)
 reAnTitle  = re.compile('"?(an) .*', re.IGNORECASE)
@@ -115,6 +115,7 @@ class Worker():
         force = False
         verbose = False
         integration_test = False
+        current_span = trace.get_current_span()
         if FEATURE_FLAGS in message:
             feature_flags = message[FEATURE_FLAGS]
             if (ALMA_FEATURE_FORCE_UPDATE_FLAG in feature_flags and
@@ -123,10 +124,11 @@ class Worker():
             if (ALMA_FEATURE_VERBOSE_FLAG in feature_flags and
                 feature_flags[ALMA_FEATURE_VERBOSE_FLAG] == "on"):
                 verbose = True
-        if (INTEGRATION_TEST in feature_flags and
-            feature_flags[INTEGRATION_TEST] == True):
+        if (INTEGRATION_TEST in message and
+            message[INTEGRATION_TEST] == True):
             integration_test = True
-        current_span = trace.get_current_span()
+            self.logger.info('running integration test for alma service')	
+            current_span.add_event("running integration test for alma service")
         current_span.add_event("sending to alma worker main")
         self.logger.info('sending to alma worker main')
         self.send_to_alma_worker(force, verbose, integration_test)
@@ -158,6 +160,7 @@ class Worker():
               batchesIn.append([school, batch])
 
         # Start xml record collection output file
+        xmlCollectionFile = xmlCollectionFileName
         if integration_test:
             xmlCollectionFile = f'AlmaDeliveryTest_{yyyymmdd}.xml'
         xmlCollectionOut = open(xmlCollectionFile, 'w')
