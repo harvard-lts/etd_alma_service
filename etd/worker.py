@@ -173,15 +173,16 @@ class Worker():
             skipBatch = False
 
             # Do not re-run a processed batch unless forced #- test
-            if ((not force) and (os.path.exists(alreadyRunRef))):
-                with open(alreadyRunRef, 'r') as alreadyRunTable:
-                    for line in alreadyRunTable:
-                        if f'Alma {batch} {school}' == line.rstrip():
-                            notifyJM.log('fail', f'Batch {batch} has already been run. Use force flag to re-run.', True)
-                            current_span.set_status(Status(StatusCode.ERROR))
-                            current_span.add_event(f'Batch {batch} has already been run. Use force flag to re-run.')
-                            skipBatch = True
-                            continue
+            if (not integration_test):
+                if ((not force) and (os.path.exists(alreadyRunRef))):
+                    with open(alreadyRunRef, 'r') as alreadyRunTable:
+                        for line in alreadyRunTable:
+                            if f'Alma {batch} {school}' == line.rstrip():
+                                notifyJM.log('fail', f'Batch {batch} has already been run. Use force flag to re-run.', True)
+                                current_span.set_status(Status(StatusCode.ERROR))
+                                current_span.add_event(f'Batch {batch} has already been run. Use force flag to re-run.')
+                                skipBatch = True
+                                continue
             if skipBatch:
                 continue
             # Let the Job Monitor know that the job has started
@@ -224,7 +225,7 @@ class Worker():
                     wroteXmlRecords = True
                     numRecordsUpdated = numRecordsUpdated + 1
                     # Update processed reference file
-                    if not integration_test:
+                    if (not integration_test):
                         with open(alreadyRunRef, 'a+') as alreadyRunFile:					
                             alreadyRunFile.write(f'Alma {batch} {school}\n')                  
 
