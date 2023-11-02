@@ -62,7 +62,7 @@ metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
 
 yyyymmdd          = get_date_time_stamp('day')
 yymmdd            = yyyymmdd[2:]
-xmlCollectionFile = f'AlmaDelivery_{yyyymmdd}.xml'
+xmlCollectionFileName = f'AlmaDelivery_{yyyymmdd}.xml'
 
 reTheTitle = re.compile('"?(the) .*', re.IGNORECASE)
 reAnTitle  = re.compile('"?(an) .*', re.IGNORECASE)
@@ -83,6 +83,7 @@ xmlEndCollection = "</collection>"
 FEATURE_FLAGS = "feature_flags"
 ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
 ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
+INTEGRATION_TEST = "integration_test"
 
 """
 This the worker class for the etd alma service.
@@ -113,6 +114,8 @@ class Worker():
     def send_to_alma(self, message):  # pragma: no cover
         force = False
         verbose = False
+        integration_test = False
+        current_span = trace.get_current_span()
         if FEATURE_FLAGS in message:
             feature_flags = message[FEATURE_FLAGS]
             if (ALMA_FEATURE_FORCE_UPDATE_FLAG in feature_flags and
@@ -121,16 +124,20 @@ class Worker():
             if (ALMA_FEATURE_VERBOSE_FLAG in feature_flags and
                 feature_flags[ALMA_FEATURE_VERBOSE_FLAG] == "on"):
                 verbose = True
-        current_span = trace.get_current_span()
+        if (INTEGRATION_TEST in message and
+            message[INTEGRATION_TEST] == True):
+            integration_test = True
+            self.logger.info('running integration test for alma service')	
+            current_span.add_event("running integration test for alma service")
         current_span.add_event("sending to alma worker main")
         self.logger.info('sending to alma worker main')
-        self.send_to_alma_worker(force, verbose)
+        self.send_to_alma_worker(force, verbose, integration_test)
         self.logger.info('complete')
         return True
 		
     @tracer.start_as_current_span("send_to_alma_worker_main")
     def send_to_alma_worker(self, force = False,
-							verbose = False):  # pragma: no cover
+							verbose = False, integration_test = False):  # pragma: no cover
         current_span = trace.get_current_span()
         current_span.add_event("sending to alma dropbox")
         global notifyJM
@@ -153,6 +160,9 @@ class Worker():
               batchesIn.append([school, batch])
 
         # Start xml record collection output file
+        xmlCollectionFile = xmlCollectionFileName
+        if integration_test:
+            xmlCollectionFile = f'AlmaDeliveryTest_{yyyymmdd}.xml'
         xmlCollectionOut = open(xmlCollectionFile, 'w')
         xmlCollectionOut.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
@@ -166,15 +176,16 @@ class Worker():
             skipBatch = False
 
             # Do not re-run a processed batch unless forced #- test
-            if ((not force) and (os.path.exists(alreadyRunRef))):
-                with open(alreadyRunRef, 'r') as alreadyRunTable:
-                    for line in alreadyRunTable:
-                        if f'Alma {batch} {school}' == line.rstrip():
-                            notifyJM.log('fail', f'Batch {batch} has already been run. Use force flag to re-run.', True)
-                            current_span.set_status(Status(StatusCode.ERROR))
-                            current_span.add_event(f'Batch {batch} has already been run. Use force flag to re-run.')
-                            skipBatch = True
-                            continue
+            if (not integration_test):
+                if ((not force) and (os.path.exists(alreadyRunRef))):
+                    with open(alreadyRunRef, 'r') as alreadyRunTable:
+                        for line in alreadyRunTable:
+                            if f'Alma {batch} {school}' == line.rstrip():
+                                notifyJM.log('fail', f'Batch {batch} has already been run. Use force flag to re-run.', True)
+                                current_span.set_status(Status(StatusCode.ERROR))
+                                current_span.add_event(f'Batch {batch} has already been run. Use force flag to re-run.')
+                                skipBatch = True
+                                continue
             if skipBatch:
                 continue
             # Let the Job Monitor know that the job has started
@@ -217,8 +228,9 @@ class Worker():
                     wroteXmlRecords = True
                     numRecordsUpdated = numRecordsUpdated + 1
                     # Update processed reference file
-                    with open(alreadyRunRef, 'a+') as alreadyRunFile:
-                        alreadyRunFile.write(f'Alma {batch} {school}\n')                  
+                    if (not integration_test):
+                        with open(alreadyRunRef, 'a+') as alreadyRunFile:					
+                            alreadyRunFile.write(f'Alma {batch} {school}\n')                  
 
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
