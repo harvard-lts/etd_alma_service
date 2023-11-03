@@ -230,7 +230,10 @@ class Worker():
                     # Update processed reference file
                     if (not integration_test):
                         with open(alreadyRunRef, 'a+') as alreadyRunFile:					
-                            alreadyRunFile.write(f'Alma {batch} {school}\n')                  
+                            alreadyRunFile.write(f'Alma {batch} {school}\n')
+                    # Store our marc xml variables
+                    with open(variableOutFile, 'w') as variablesOut:
+                        variablesOut.write(f'marcXmlValues = {marcXmlValues}\n')
 
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
@@ -262,10 +265,6 @@ class Worker():
                     self.logger.debug("uploaded file: " + str(targetFile))
 
             xfer.close()
-
-            # Store our marc xml variables
-            with open(variableOutFile, 'w') as variablesOut:
-                variablesOut.write(f'marcXmlValues = {marcXmlValues}\n')
 
             recordsWereUpdated = True
             # Otherwise, remove file
