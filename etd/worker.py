@@ -198,14 +198,20 @@ class Worker():
             metsFile = f'{dataDir}/in/{batch}/mets.xml'
             if not os.path.exists(metsFile):
                 notifyJM.log('fail', f"{metsFile} not found", True)
-                notifyJM.report('stopped')
-                return False
+                notifyJM.log('fail', f'skippping batch {batch} for school {school}', True)
+                current_span.set_status(Status(StatusCode.ERROR))
+                current_span.add_event(f'skippping batch {batch} for school {school}')
+                self.logger.error(f'skippping batch {batch} for school {school}')
+                continue
 
             mapFile = f'{batchOutDir}/mapfile'
             if not os.path.exists(mapFile):
                 notifyJM.log('fail', f"{mapFile} not found", True)
-                notifyJM.report('stopped')
-                return False
+                notifyJM.log('fail', f'skippping batch {batch} for school {school}', True)
+                current_span.set_status(Status(StatusCode.ERROR))
+                current_span.add_event(f'skippping batch {batch} for school {school}')
+                self.logger.error(f'skippping batch {batch} for school {school}')
+                continue
 
             # Get needed data from mets file
             marcXmlValues = getFromMets(metsFile, verbose)
