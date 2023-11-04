@@ -55,6 +55,9 @@ alreadyRunRef       = f'{filesDir}/already_processed.ref'
 dashLink            = 'https://nrs.harvard.edu/urn-3:HUL.InstRepos:'
 notifyJM            = False
 jobCode             = 'etds2alma'
+mongoUrl			= os.getenv('MONGO_URL')
+mongoDbName			= os.getenv('MONGO_DB_NAME')
+mongoDbCollection	= os.getenv('MONGO_DB_COLLECTION')
 
 metsDmdSecNamespace = '{http://www.loc.gov/METS/}'
 metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
