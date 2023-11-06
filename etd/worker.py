@@ -55,9 +55,9 @@ alreadyRunRef       = f'{filesDir}/already_processed.ref'
 dashLink            = 'https://nrs.harvard.edu/urn-3:HUL.InstRepos:'
 notifyJM            = False
 jobCode             = 'etds2alma'
-mongoUrl			= os.getenv('MONGO_URL')
-mongoDbName			= os.getenv('MONGO_DB_NAME')
-mongoDbCollection	= os.getenv('MONGO_DB_COLLECTION')
+mongoUrl            = os.getenv('MONGO_URL')
+mongoDbName         = os.getenv('MONGO_DB_NAME')
+mongoDbCollection   = os.getenv('MONGO_DB_COLLECTION')
 
 metsDmdSecNamespace = '{http://www.loc.gov/METS/}'
 metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
@@ -175,7 +175,6 @@ class Worker():
         numRecordsUpdated = 0
         for (school, batch) in batchesIn:
             batchOutDir      = f'{dataDir}/out/{batch}'
-            variableOutFile  = f'{batchOutDir}/variables.py'
             skipBatch = False
 
             # Do not re-run a processed batch unless forced #- test
@@ -240,9 +239,6 @@ class Worker():
                     if (not integration_test):
                         with open(alreadyRunRef, 'a+') as alreadyRunFile:					
                             alreadyRunFile.write(f'Alma {batch} {school}\n')
-                    # Store our marc xml variables
-                    with open(variableOutFile, 'w') as variablesOut:
-                        variablesOut.write(f'marcXmlValues = {marcXmlValues}\n')
 
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
