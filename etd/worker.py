@@ -44,7 +44,7 @@ span_processor = BatchSpanProcessor(otlp_exporter)
 provider.add_span_processor(span_processor)
 trace.set_tracer_provider(provider)
 if "PYTEST_CURRENT_TEST" in os.environ:
-	trace.set_tracer_provider(NoOpTracerProvider())
+    trace.set_tracer_provider(NoOpTracerProvider())
 tracer = trace.get_tracer(__name__)
 
 almaMarcxmlTemplate = os.getenv('ALMA_MARCXML_TEMPLATE',
