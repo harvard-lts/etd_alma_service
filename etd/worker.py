@@ -4,9 +4,9 @@ import requests
 from opentelemetry import trace
 from opentelemetry.trace import Status
 from opentelemetry.trace import StatusCode
+from opentelemetry.trace import NoOpTracerProvider
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace import NoOpTracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
         OTLPSpanExporter)

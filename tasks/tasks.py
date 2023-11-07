@@ -9,10 +9,10 @@ import etd
 from etd.worker import Worker
 import json
 from opentelemetry import trace
+from opentelemetry.trace import NoOpTracerProvider
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
         OTLPSpanExporter)
 from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace import NoOpTracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import SERVICE_NAME
