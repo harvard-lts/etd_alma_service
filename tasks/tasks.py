@@ -13,6 +13,7 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
         OTLPSpanExporter)
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace import NoOpTracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import SERVICE_NAME
 from opentelemetry.trace.propagation.tracecontext \
@@ -37,6 +38,8 @@ otlp_exporter = OTLPSpanExporter(endpoint=JAEGER_NAME, insecure=True)
 span_processor = BatchSpanProcessor(otlp_exporter)
 provider.add_span_processor(span_processor)
 trace.set_tracer_provider(provider)
+if "PYTEST_CURRENT_TEST" in os.environ:
+	trace.set_tracer_provider(NoOpTracerProvider())
 tracer = trace.get_tracer(__name__)
 
 # heartbeat setup
