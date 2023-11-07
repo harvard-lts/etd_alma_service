@@ -797,7 +797,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 @tracer.start_as_current_span("write_record")
 def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
                  insertion_date, last_modified_date,
-				 alma_dropbox_submission_date, collection_name, mongo_db):
+				 alma_dropbox_submission_date, collection_name, mongo_db):  # pragma: no cover
     logger = logging.getLogger('etd_alma')
     current_span = trace.get_current_span()
     write_success = False
