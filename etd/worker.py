@@ -267,6 +267,7 @@ class Worker():
                                                 insertionDate,
                                                 lastModifiedDate,
                                                 almaDropboxSubmissionDate,
+												batch,
                                                 collectionName, mongoDb)
                     if (not writeSuccess):
                         self.logger.error(f'Could not record proquest id {proquestId} in {batch} for school {school} in mongo')
