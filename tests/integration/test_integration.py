@@ -37,6 +37,7 @@ class TestWorkerIntegrationClass():
         proquest_id = random.randrange(10000, 99999)
         school_alma_dropbox = "itest"
         alma_submission_status = "ALMA_INTEGRATION_SUCCESS"
+        directory_id = "proquest1234-5678-itest"
         insertion_date = datetime.datetime.now().isoformat()
         last_modified_date = datetime.datetime.now().isoformat()
         alma_dropbox_submission_date = datetime.datetime.now().isoformat()
@@ -44,6 +45,7 @@ class TestWorkerIntegrationClass():
         result = write_record(proquest_id, school_alma_dropbox,
                               alma_submission_status, insertion_date,
                               last_modified_date, alma_dropbox_submission_date,
+                              directory_id,
                               "integration_test", mongo_db)
         # Assert that the function returns True
         assert result
@@ -54,7 +56,7 @@ class TestWorkerIntegrationClass():
         # Call the write_record function with mock data
         result = write_record("12345", "school_alma_dropbox",
                               "alma_submission_status", "2022-01-01",
-                              "2022-01-02", "2022-01-03", "collection_name",
-                              mongo_db)
+                              "2022-01-02", "2022-01-03", "proquest1234-5678-itest",
+                              "collection_name", mongo_db)
         # Assert that the function returns False
         assert not result
