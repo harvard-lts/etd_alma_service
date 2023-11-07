@@ -15,6 +15,8 @@ import sys
 import re
 from lxml import etree
 import logging
+import datetime
+from pymongo import MongoClient
 
 # To help find other directories that might hold modules or config files
 binDir = os.path.dirname(os.path.realpath(__file__))
@@ -86,7 +88,7 @@ xmlEndCollection = "</collection>"
 FEATURE_FLAGS = "feature_flags"
 ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
 ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
-INTEGRATION_TEST = "integration_test"
+INTEGRATION_TEST = os.getenv('MONGO_DB_COLLECTION_ITEST', 'integration_test')
 
 """
 This the worker class for the etd alma service.
@@ -145,6 +147,19 @@ class Worker():
         current_span.add_event("sending to alma dropbox")
         global notifyJM
         wroteXmlRecords = False
+
+        collectionName = None
+        if integration_test:
+            collectionName = INTEGRATION_TEST
+        else:
+            collectionName = mongoDbCollection
+
+        # Connect to mongo
+        try:
+            mongo_client = MongoClient(mongoUrl, maxPoolSize=1)
+            mongoDb = mongo_client[mongoDbName]
+        except Exception as err:
+            self.logger.error("Error: unable to connect to mongodb", exc_info=True)
 
 	    # Create a notify object, this will also set-up logging and
         # logFile  = f'{logDir}/{jobCode}.{yymmdd}.log'
@@ -239,7 +254,26 @@ class Worker():
                     if (not integration_test):
                         with open(alreadyRunRef, 'a+') as alreadyRunFile:					
                             alreadyRunFile.write(f'Alma {batch} {school}\n')
-
+					# Update mongo
+                    proquestId = marcXmlValues['proquestId']
+                    schoolAlmaDropbox = school
+                    almaSubmissionStatus = "ALMA_DROPBOX"
+                    insertionDate = datetime.datetime.now().isoformat()
+                    lastModifiedDate = datetime.datetime.now().isoformat()
+                    almaDropboxSubmissionDate = datetime.datetime.now().isoformat()
+                    writeSuccess = write_record(proquestId, 
+                                                schoolAlmaDropbox,
+                                                almaSubmissionStatus,
+                                                insertionDate,
+                                                lastModifiedDate,
+                                                almaDropboxSubmissionDate,
+                                                collectionName, mongoDb)
+                    if (not writeSuccess):
+                        self.logger.error(f'Could not record proquest id {proquestId} in {batch} for school {school} in mongo')
+                        notifyJM.log('fail', f"Could not record proquest id {proquestId} in {batch} for school {school} in mongo", True)
+                        current_span.set_status(Status(StatusCode.ERROR))	
+                        current_span.add_event(f'Could not record proquest id {proquestId} in {batch} for school {school} in mongo')
+					
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
         if wroteXmlRecords:
@@ -273,6 +307,7 @@ class Worker():
 
             recordsWereUpdated = True
             # Otherwise, remove file
+            os.remove(xmlCollectionFile)
         else:
             xmlCollectionOut.close()
             os.remove(xmlCollectionFile)
@@ -757,3 +792,36 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 	
 	# And then return it to be collected with other processed records
 	return marcXmlStr
+
+
+@tracer.start_as_current_span("write_record")
+def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
+                 insertion_date, last_modified_date,
+				 alma_dropbox_submission_date, collection_name, mongo_db):  # pragma: no cover
+    logger = logging.getLogger('etd_alma')
+    current_span = trace.get_current_span()
+    write_success = False
+
+    if mongo_db == None:
+        logger.error("Error: mongo db not instantiated")
+        current_span.set_status(Status(StatusCode.ERROR))
+        current_span.add_event("Error: mongo db not instantiated")		
+        return write_success
+    try:
+        proquest_record = { "proquest_id": proquest_id,
+                            "school_alma_dropbox": school_alma_dropbox,
+                            "alma_submission_status": alma_submission_status,
+                            "insertion_date": insertion_date,
+                            "last_modified_date": last_modified_date,
+                            "alma_dropbox_submission_date":
+							 alma_dropbox_submission_date }
+        etds_collection = mongo_db[collection_name]
+        etds_collection.insert_one(proquest_record)
+        logger.info("proquest id " + str(proquest_id) + " written to mongo")
+        current_span.add_event("proquest id " + str(proquest_id) + " written to mongo")
+        write_success = True
+    except Exception as err:
+        current_span.set_status(Status(StatusCode.ERROR))
+        logger.error("Error: unable to connect to mongodb", exc_info=True)
+        current_span.add_event("Error: unable to connect to mongodb")
+    return write_success
