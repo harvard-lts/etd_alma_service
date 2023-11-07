@@ -56,7 +56,8 @@ class TestWorkerIntegrationClass():
         # Call the write_record function with mock data
         result = write_record("12345", "school_alma_dropbox",
                               "alma_submission_status", "2022-01-01",
-                              "2022-01-02", "2022-01-03", "proquest1234-5678-itest",
+                              "2022-01-02", "2022-01-03",
+                              "proquest1234-5678-itest",
                               "collection_name", mongo_db)
         # Assert that the function returns False
         assert not result
