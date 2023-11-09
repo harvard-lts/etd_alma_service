@@ -243,7 +243,13 @@ class Worker():
                     notifyJM.log('warn', f"Dash ID was not found in {mapFile}", True)
 	
                 # Write marc xml record in batch directory
-                marcXmlRecord = writeMarcXml(batch, batchOutDir, marcXmlValues, verbose)
+                try:
+                    marcXmlRecord = writeMarcXml(batch, batchOutDir, marcXmlValues, verbose)
+                except Exception as err:
+                    self.logger.error(f"Writing MARCXML record for {batch} for {school} failed, skipping", exc_info=True)
+                    notifyJM.log('fail', f"Writing MARCXML record for {batch} for {school} failed, skipping", True)
+                    current_span.set_status(Status(StatusCode.ERROR))
+                    current_span.add_event(f'Writing MARCXML record for {batch} for {school} failed, skipping')
 
                 # And then write xml record to collection file
                 if marcXmlRecord:
