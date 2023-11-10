@@ -1,6 +1,7 @@
 from etd.worker import Worker
 from etd.worker import getFromMets
 from etd.worker import writeMarcXml
+from etd.worker import escapeStr
 import requests
 import lxml.etree as ET
 import os
@@ -148,3 +149,9 @@ class TestWorkerClass():
         assert doc.xpath(dashXpath,
                          namespaces=namespace_mapping)[0].text == \
             "https://nrs.harvard.edu/urn-3:HUL.InstRepos:993578"
+
+    def test_escapeStr(self):
+        line = "     “<This & That  Tests>”   "
+        newLine = escapeStr(line)
+        assert newLine == ' "&lt;This &amp; That Tests&gt;" '
+        
