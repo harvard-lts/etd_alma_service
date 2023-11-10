@@ -154,4 +154,3 @@ class TestWorkerClass():
         line = "     “<This & That  Tests>”   "
         newLine = escapeStr(line)
         assert newLine == ' "&lt;This &amp; That Tests&gt;" '
-        
