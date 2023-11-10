@@ -89,6 +89,7 @@ FEATURE_FLAGS = "feature_flags"
 ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
 ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
 INTEGRATION_TEST = os.getenv('MONGO_DB_COLLECTION_ITEST', 'integration_test')
+ALMA_TEST_BATCH_NAME = os.getenv('ALMA_TEST_BATCH_NAME','proquest2023071720-993578-gsd')
 
 """
 This the worker class for the etd alma service.
@@ -181,6 +182,10 @@ class Worker():
         xmlCollectionFile = xmlCollectionFileName
         if integration_test:
             xmlCollectionFile = f'AlmaDeliveryTest_{yyyymmdd}.xml'
+            schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', ALMA_TEST_BATCH_NAME)
+            if schoolMatch:
+                school = schoolMatch.group(1)
+                batchesIn = [[school, ALMA_TEST_BATCH_NAME]]			
         xmlCollectionOut = open(xmlCollectionFile, 'w')
         xmlCollectionOut.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
@@ -243,6 +248,7 @@ class Worker():
                     notifyJM.log('warn', f"Dash ID was not found in {mapFile}", True)
 	
                 # Write marc xml record in batch directory
+                marcXmlRecord = False
                 try:
                     marcXmlRecord = writeMarcXml(batch, batchOutDir, marcXmlValues, verbose)
                 except Exception as err:
@@ -250,6 +256,7 @@ class Worker():
                     notifyJM.log('fail', f"Writing MARCXML record for {batch} for {school} failed, skipping", True)
                     current_span.set_status(Status(StatusCode.ERROR))
                     current_span.add_event(f'Writing MARCXML record for {batch} for {school} failed, skipping')
+                    continue
 
                 # And then write xml record to collection file
                 if marcXmlRecord:
