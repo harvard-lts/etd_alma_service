@@ -133,15 +133,3 @@ def send_to_alma(json_message):
         # do not trigger the next task.
         if "unit_test" in json_message:
             return new_message
-
-        # publish to ingested_into_alma for helloworld,
-        # eventually webhooks will do that instead
-        if traceparent is None:  # pragma: no cover, tracing is not being tested # noqa: E501
-            carrier = {}
-            TraceContextTextMapPropagator().inject(carrier)
-            traceparent = carrier["traceparent"]
-        new_message["traceparent"] = traceparent  # pragma: no cover, tracing is not being tested # noqa: E501
-        current_span.add_event("to next queue")  # pragma: no cover, tracing is not being tested # noqa: E501
-        app.send_task("etd-alma-monitor-service.tasks.send_to_drs",
-                      args=[new_message], kwargs={},
-                      queue=os.getenv('PUBLISH_QUEUE_NAME'))  # pragma: no cover, does not reach this for unit testing # noqa: E501
