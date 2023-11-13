@@ -638,7 +638,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 							if len(marcXmlValues['subjects']) > 0:
 								marcXmlValues['subjects'].reverse()
 								for subject in marcXmlValues['subjects']:
-									subject = escapeStr(pqSubject)
+									subject = escapeStr(subject)
 									newDatafield653Str = datafield653Str.replace('SUBJECT_VALUE', subject)
 									parent.addnext(etree.fromstring(newDatafield653Str))
 									
