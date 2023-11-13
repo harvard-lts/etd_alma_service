@@ -220,7 +220,9 @@ class Worker():
                 notifyJM.log('fail', f"{metsFile} not found", True)
                 notifyJM.log('fail', f'skippping batch {batch} for school {school}', True)
                 current_span.set_status(Status(StatusCode.ERROR))
+                current_span.add_event(f'{metsFile} not found')
                 current_span.add_event(f'skippping batch {batch} for school {school}')
+                self.logger.error(f'{metsFile} not found')
                 self.logger.error(f'skippping batch {batch} for school {school}')
                 continue
 
@@ -229,7 +231,9 @@ class Worker():
                 notifyJM.log('fail', f"{mapFile} not found", True)
                 notifyJM.log('fail', f'skippping batch {batch} for school {school}', True)
                 current_span.set_status(Status(StatusCode.ERROR))
+                current_span.add_event(f'{mapFile} not found')
                 current_span.add_event(f'skippping batch {batch} for school {school}')
+                self.logger.error(f'{mapFile} not found')
                 self.logger.error(f'skippping batch {batch} for school {school}')
                 continue
 
