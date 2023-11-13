@@ -17,6 +17,7 @@ from lxml import etree
 import logging
 import datetime
 from pymongo import MongoClient
+from xml.sax.saxutils import escape
 
 # To help find other directories that might hold modules or config files
 binDir = os.path.dirname(os.path.realpath(__file__))
@@ -89,6 +90,7 @@ FEATURE_FLAGS = "feature_flags"
 ALMA_FEATURE_FORCE_UPDATE_FLAG = "alma_feature_force_update_flag"
 ALMA_FEATURE_VERBOSE_FLAG = "alma_feature_verbose_flag"
 INTEGRATION_TEST = os.getenv('MONGO_DB_COLLECTION_ITEST', 'integration_test')
+ALMA_TEST_BATCH_NAME = os.getenv('ALMA_TEST_BATCH_NAME','proquest2023071720-993578-gsd')
 
 """
 This the worker class for the etd alma service.
@@ -181,6 +183,10 @@ class Worker():
         xmlCollectionFile = xmlCollectionFileName
         if integration_test:
             xmlCollectionFile = f'AlmaDeliveryTest_{yyyymmdd}.xml'
+            schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', ALMA_TEST_BATCH_NAME)
+            if schoolMatch:
+                school = schoolMatch.group(1)
+                batchesIn = [[school, ALMA_TEST_BATCH_NAME]]			
         xmlCollectionOut = open(xmlCollectionFile, 'w')
         xmlCollectionOut.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
@@ -243,7 +249,15 @@ class Worker():
                     notifyJM.log('warn', f"Dash ID was not found in {mapFile}", True)
 	
                 # Write marc xml record in batch directory
-                marcXmlRecord = writeMarcXml(batch, batchOutDir, marcXmlValues, verbose)
+                marcXmlRecord = False
+                try:
+                    marcXmlRecord = writeMarcXml(batch, batchOutDir, marcXmlValues, verbose)
+                except Exception as err:
+                    self.logger.error(f"Writing MARCXML record for {batch} for {school} failed, skipping", exc_info=True)
+                    notifyJM.log('fail', f"Writing MARCXML record for {batch} for {school} failed, skipping", True)
+                    current_span.set_status(Status(StatusCode.ERROR))
+                    current_span.add_event(f'Writing MARCXML record for {batch} for {school} failed, skipping')
+                    continue
 
                 # And then write xml record to collection file
                 if marcXmlRecord:
@@ -393,7 +407,7 @@ def getFromMets(metsFile, verbose):  # pragma: no cover
 			# Description
 			elif dimField.attrib['element'] == 'description':
 				if dimField.attrib['qualifier'] == 'abstract':
-					marcXmlValues['description'] = dimField.text.replace('\n', ' ')
+					marcXmlValues['description'] = escapeStr(dimField.text)
 				
 			# Subjects
 			elif dimField.attrib['element'] == 'subject':
@@ -509,7 +523,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 					# Author
 					if child.attrib['code'] == 'a':
 						childText  = child.text.replace('AUTHOR_VALUE', marcXmlValues['author'])
-						child.text = childText
+						child.text = escapeStr(childText)
 
 					# Degree name and year				
 					if child.attrib['code'] == 'c':
@@ -580,7 +594,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 				elif parent.attrib['tag'] == '520':
 					if parent.attrib['ind1'] == '3' and child.attrib['code'] == 'a':
 						childText  = child.text.replace('ABSTRACT_VALUE', marcXmlValues['description'])
-						child.text = childText
+						child.text = escapeStr(childText)
 						
 				# Datafield 653s
 				elif parent.attrib['tag'] == '653':
@@ -594,13 +608,14 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 							pqSubject = marcXmlValues['pq_subjects'].pop(0)
 							datafield653Str = etree.tostring(parent, encoding='unicode')
 							childText  = childText.replace('PQ_SUBJECT_VALUE', pqSubject)
-							child.text = childText
+							child.text = escapeStr(childText)
 
 							# If there's more, add them but the list needs 
 							# to be reversed to keep the order
 							if len(marcXmlValues['pq_subjects']) > 0:
 								marcXmlValues['pq_subjects'].reverse()
 								for pqSubject in marcXmlValues['pq_subjects']:
+									pqSubject = escapeStr(pqSubject)
 									newDatafield653Str = datafield653Str.replace('PQ_SUBJECT_VALUE', pqSubject)
 									parent.addnext(etree.fromstring(newDatafield653Str))
 									
@@ -616,13 +631,14 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 							subject = marcXmlValues['subjects'].pop(0)
 							datafield653Str = etree.tostring(parent, encoding='unicode')
 							childText  = childText.replace('SUBJECT_VALUE', subject)
-							child.text = childText
+							child.text = escapeStr(childText)
 
 							# If there's more, add them but the list needs 
 							# to be reversed to keep the order
 							if len(marcXmlValues['subjects']) > 0:
 								marcXmlValues['subjects'].reverse()
 								for subject in marcXmlValues['subjects']:
+									subject = escapeStr(pqSubject)
 									newDatafield653Str = datafield653Str.replace('SUBJECT_VALUE', subject)
 									parent.addnext(etree.fromstring(newDatafield653Str))
 									
@@ -642,13 +658,14 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 							advisor = marcXmlValues['advisors'].pop(0)
 							datafield720Str = etree.tostring(parent, encoding='unicode')
 							childText  = childText.replace('ADVISOR_VALUE', advisor)
-							child.text = childText
+							child.text = escapeStr(childText)
 
 							# If there's more, add them but the list needs 
 							# to be reversed to keep the order
 							if len(marcXmlValues['advisors']) > 0:
 								marcXmlValues['advisors'].reverse()
 								for advisor in marcXmlValues['advisors']:
+									advisor = escapeStr(advisor)
 									newDatafield720Str = datafield720Str.replace('ADVISOR_VALUE,', advisor)
 									newDatafield720Str += '\n'
 									parent.addnext(etree.fromstring(newDatafield720Str))
@@ -665,13 +682,14 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 							committeeMember = marcXmlValues['committeeMembers'].pop(0)
 							datafield720Str = etree.tostring(parent, encoding='unicode')
 							childText  = childText.replace('COMMITTEE_MEMBER_VALUE', committeeMember)
-							child.text = childText
+							child.text = escapeStr(childText)
 
 							# If there's more, add them but the list needs 
 							# to be reversed to keep the order
 							if len(marcXmlValues['committeeMembers']) > 0:
 								marcXmlValues['committeeMembers'].reverse()
 								for committeeMember in marcXmlValues['committeeMembers']:
+									committeeMember = escapeStr(committeeMember)
 									newDatafield720Str = datafield720Str.replace('COMMITTEE_MEMBER_VALUE', committeeMember)
 									newDatafield720Str += '\n'
 									parent.addnext(etree.fromstring(newDatafield720Str))
@@ -825,3 +843,12 @@ def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
         logger.error("Error: unable to connect to mongodb", exc_info=True)
         current_span.add_event("Error: unable to connect to mongodb")
     return write_success
+
+def escapeStr(s):
+	# 1) remove multiple repeated spaces
+    s = re.sub(r"\s+"," ", s)
+	# 2) replace smart quotes
+    s = s.replace('“', '"').replace('”', '"')
+	# 3) escape xml characters
+    s = escape(s)
+    return s
