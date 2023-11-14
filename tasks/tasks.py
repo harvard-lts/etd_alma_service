@@ -85,7 +85,6 @@ app.steps["worker"].add(LivenessProbe)
 
 @app.task(serializer='json', name='etd-alma-service.tasks.send_to_alma')
 def send_to_alma(json_message):
-    traceparent = None
     ctx = None
     if "traceparent" in json_message:  # pragma: no cover, tracing is not being tested # noqa: E501
         carrier = {"traceparent": json_message["traceparent"]}
