@@ -285,6 +285,7 @@ class Worker():
                                                 insertionDate,
                                                 lastModifiedDate,
                                                 almaDropboxSubmissionDate,
+												batch,
                                                 collectionName, mongoDb)
                     if (not writeSuccess):
                         self.logger.error(f'Could not record proquest id {proquestId} in {batch} for school {school} in mongo')
@@ -819,7 +820,8 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 @tracer.start_as_current_span("write_record")
 def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
                  insertion_date, last_modified_date,
-				 alma_dropbox_submission_date, collection_name, mongo_db):  # pragma: no cover
+				 alma_dropbox_submission_date, directory_id,
+				 collection_name, mongo_db):  # pragma: no cover
     logger = logging.getLogger('etd_alma')
     current_span = trace.get_current_span()
     write_success = False
@@ -836,7 +838,8 @@ def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
                             "insertion_date": insertion_date,
                             "last_modified_date": last_modified_date,
                             "alma_dropbox_submission_date":
-							 alma_dropbox_submission_date }
+							 alma_dropbox_submission_date,
+							 "directory_id": directory_id}
         etds_collection = mongo_db[collection_name]
         etds_collection.insert_one(proquest_record)
         logger.info("proquest id " + str(proquest_id) + " written to mongo")
