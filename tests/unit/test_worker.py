@@ -151,6 +151,6 @@ class TestWorkerClass():
             "https://nrs.harvard.edu/urn-3:HUL.InstRepos:993578"
 
     def test_escapeStr(self):
-        line = "     “<This & That  Tests>”   "
+        line = "     “<This & That  Tests>”   \u0000\u0009\u000a\u000c\u000d"
         newLine = escapeStr(line)
         assert newLine == ' "&lt;This &amp; That Tests&gt;" '

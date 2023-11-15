@@ -852,10 +852,13 @@ def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
     return write_success
 
 def escapeStr(s):
-	# 1) remove multiple repeated spaces
+    # 1) strip null character
+    s = re.sub(r"[\u0000\x00]",'', s)
+    # 2) remove multiple repeated whitespaces
+    # ie: tab, line feed, form feed, carriage return
     s = re.sub(r"\s+"," ", s)
-	# 2) replace smart quotes
+    # 3) replace smart quotes
     s = s.replace('“', '"').replace('”', '"')
-	# 3) escape xml characters
+    # 4) escape xml characters
     s = escape(s)
     return s
