@@ -2,9 +2,11 @@ from etd.worker import Worker
 from etd.worker import getFromMets
 from etd.worker import writeMarcXml
 from etd.worker import escapeStr
+from etd.worker import cleanMetsFile
 import requests
 import lxml.etree as ET
 import os
+import shutil
 
 generatedMarcXmlValues = None
 abstractText = 'The "Naming Expeditor" project aims to demystify the ' \
@@ -154,3 +156,15 @@ class TestWorkerClass():
         line = "     “<This & That  Tests>”   \u0000\u0009\u000a\u000c\u000d"
         newLine = escapeStr(line)
         assert newLine == ' "&lt;This &amp; That Tests&gt;" '
+
+    def test_cleanMetsFile(self):
+        testFile = "./tests/data/test.xml"
+        resetFile = "./tests/data/test.xml.orig"
+        cleanMetsFile(testFile)
+        assert os.path.exists(testFile)
+        f = open(testFile)
+        contents = f.read()
+        f.close()
+        # reset file
+        shutil.copy2(resetFile, testFile)
+        assert contents == "<xml?><test>pass</test></xml>"

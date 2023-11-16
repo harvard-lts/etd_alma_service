@@ -358,6 +358,7 @@ def getFromMets(metsFile, verbose):  # pragma: no cover
 	committeeMembers = []
 	
 	# Load mets file, get the root node and then parse
+	cleanMetsFile(metsFile)
 	metsTree   = etree.parse(metsFile)
 	rootMets   = metsTree.getroot()
 	rootDmdSec = rootMets.find(f'{metsDmdSecNamespace}dmdSec')
@@ -862,3 +863,11 @@ def escapeStr(s):
     # 4) escape xml characters
     s = escape(s)
     return s
+
+def cleanMetsFile(metsFile):
+    with open(metsFile, 'r') as metsFileIn:
+        metsFileContents = metsFileIn.readlines()
+
+    with open(metsFile, 'w') as metsFileOut:
+        for line in metsFileContents:
+            metsFileOut.write(line.replace(u'\u000c','').replace("&FF;",""))
