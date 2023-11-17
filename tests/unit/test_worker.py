@@ -3,6 +3,7 @@ from etd.worker import getFromMets
 from etd.worker import writeMarcXml
 from etd.worker import escapeStr
 from etd.worker import cleanMetsFile
+from etd.worker import normalizeLookupKey
 import requests
 import lxml.etree as ET
 import os
@@ -185,6 +186,7 @@ class TestWorkerClass():
         assert generatedMarcXmlValues['degreeLevel'] == "Master's"
         assert degreeLevelTracing[generatedMarcXmlValues['degreeLevel']] == \
             "Theses"
-        assert degreeLevelTracing["Doctoral Dissertation"] == "Dissertations"
+        assert degreeLevelTracing[normalizeLookupKey("Doctoral Dissertation")]\
+            == "Dissertations"
         assert degreeLevelTracing["Master's"] == "Theses"
         assert degreeLevelTracing["Bachelors"] == "Theses"

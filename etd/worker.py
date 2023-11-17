@@ -731,7 +731,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 					if child.attrib['code'] == 'p':
 						if schools[marcXmlValues['school']]['degree_level_tracing']:
 							if 'degreeLevel' in marcXmlValues:
-								childText  = child.text.replace('DEGREE_LEVEL_TRACING_VALUE', degreeLevelTracing[marcXmlValues['degreeLevel']])
+								childText  = child.text.replace('DEGREE_LEVEL_TRACING_VALUE', degreeLevelTracing[normalizeLookupKey(marcXmlValues['degreeLevel'])])
 								child.text = childText
 							else:
 								notifyJM.log('fail', f"Degree level was not found in mets.xml. Cannot continue writing {xmlRecordFile}.", True)
@@ -874,3 +874,7 @@ def cleanMetsFile(metsFile):
         for line in metsFileContents:
             line = r.sub('', line)			
             metsFileOut.write(line)
+
+def normalizeLookupKey(k):
+	# return first word of key
+	return k.split()[0]
