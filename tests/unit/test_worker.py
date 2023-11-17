@@ -7,6 +7,7 @@ import requests
 import lxml.etree as ET
 import os
 import shutil
+from etd.etds2alma_tables import degreeLevelTracing
 
 generatedMarcXmlValues = None
 abstractText = 'The "Naming Expeditor" project aims to demystify the ' \
@@ -179,3 +180,11 @@ class TestWorkerClass():
         assert marcXmlValues['author'] == 'Zinn, Eric Michael'
         assert marcXmlValues['title'] == 'Combinatorial Ancestral AAV ' \
             'Capsid Libraries Enable Multidimensional Study of Vector Biology'
+
+    def test_degreeLevelLookup(self):
+        assert generatedMarcXmlValues['degreeLevel'] == "Master's"
+        assert degreeLevelTracing[generatedMarcXmlValues['degreeLevel']] == \
+            "Theses"
+        assert degreeLevelTracing["Doctoral Dissertation"] == "Dissertations"
+        assert degreeLevelTracing["Master's"] == "Theses"
+        assert degreeLevelTracing["Bachelors"] == "Theses"
