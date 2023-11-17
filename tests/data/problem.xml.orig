@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mets xmlns="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="etd-mets-1" OBJID="etd-submission-853755" TYPE="DSpace ITEM" PROFILE="http://www.dspace.org/schema/aip/mets_aip_1_0.xsd" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
+  <metsHdr CREATEDATE="2021-11-16T12:08:08-05:00">
+    <agent ROLE="CREATOR" TYPE="OTHER">
+      <name>ETD Administrator, ProQuest</name>
+    </agent>
+  </metsHdr>
+  <dmdSec ID="etdadmin-mets-dmd-1" GROUPID="etdadmin-mets-dmd-1">
+    <mdWrap LABEL="DIM Metadata" MDTYPE="OTHER" OTHERMDTYPE="DIM">
+      <xmlData xmlns:dim="http://www.dspace.org/xmlns/dspace/dim">
+        <dim:dim>
+          <dim:field mdschema="dc" element="contributor" qualifier="author" authority="">Zinn, Eric Michael</dim:field>
+          <dim:field mdschema="dc" element="identifier" qualifier="orcid" authority="">0000-0001-6993-5443</dim:field>
+          <dim:field mdschema="dc" element="identifier" qualifier="other">28769235</dim:field>
+          <dim:field mdschema="dc" element="title">Combinatorial Ancestral AAV Capsid Libraries Enable Multidimensional Study of Vector Biology</dim:field>
+          <dim:field mdschema="dc" element="description" qualifier="abstract">Among the numerous approaches to deliver therapeutic genes target tissues or cell types, AdenoAssociated Viral (AAV) vectors have emerged as a safe and efficacious platform. The protein sequence of the AAV Capsid determines a wide range of clinically relevant properties, including
+ease of manufacturing, tissue tropism, immunogenicity, and recognition or neutralization by preexisting antibodies. Consequently, there have been many efforts to discover or develop AAV capsids
+with desirable properties. Current approaches to engineer the AAV capsid are hampered by a limited understanding of the how the complex quaternary structure of the capsid proteins underpins
+the functional domains on the surface of the particle. To circumvent this issue, the field has long
+relied upon directed evolution approaches wherein large mutagenic libraries of AAV capsids are subjected to repeated rounds of selection. This has left the field with an abundance of new, highly functional vectors, but a scarcity of information on the mechanisms underlying such increased functionality. To address these gaps in our understanding, we first introduce a new family of vectors derived
+through ancestral sequence reconstruction, AncAAVs. Next, we develop and validate an approach
+to produce pooled mutagenic libraries of AAV capsids with minimal mosaicism or cross-packaging.
+We then combine a new cloning approach with a new analytical approach to comprehensively chariii
+Thesis advisor: Professor Luk H. Vandenberghe Eric M. Zinn
+acterize a barcoded library of AncAAV capsids, enabling the discovery of a new liver-detargeting
+mutation. Finally, we leverage the entire set of barcoded AncAAV libraries to identify regions of the
+capsid which are neutralized by sera from naturally exposed human donors. Taken together, these
+findings demonstrate the power of barcoded AAV library approaches to make new discoveries about
+AAV capsid biology, and hopefully to better inform design of the next generation of AAV viral vectors.</dim:field>
+          <dim:field mdschema="dc" element="subject" qualifier="PQ">Systematic biology</dim:field>
+          <dim:field mdschema="dc" element="contributor" qualifier="advisor">Vandenberghe, Luk H</dim:field>
+          <dim:field mdschema="dc" element="contributor" qualifier="committeeMember">Mitchison, Timothy J</dim:field>
+          <dim:field mdschema="dc" element="contributor" qualifier="committeeMember">Cepko, Connie</dim:field>
+          <dim:field mdschema="dc" element="contributor" qualifier="committeeMember">Wilson, James</dim:field>
+          <dim:field mdschema="dc" element="date" qualifier="created">2021</dim:field>
+          <dim:field mdschema="dc" element="date" qualifier="submitted">2021</dim:field>
+          <dim:field mdschema="dc" element="date" qualifier="issued">2021-11-16</dim:field>
+          <dim:field mdschema="dc" element="format" qualifier="mimetype">application/pdf</dim:field>
+          <dim:field mdschema="dc" element="language" qualifier="iso">en</dim:field>
+          <dim:field mdschema="dc" element="type" qualifier="material">text</dim:field>
+          <dim:field mdschema="dc" element="type">Thesis or Dissertation</dim:field>
+          <dim:field mdschema="dc" element="description" qualifier="provenance">Submission published under embargo, the embargo will last until 2023-11-16</dim:field>
+          <dim:field mdschema="dc" element="description" qualifier="provenance">The student, Zinn, Eric, accepted the attached license on 2021-09-14 at 12:05.</dim:field>
+          <dim:field mdschema="dc" element="description" qualifier="provenance">The student, Zinn, Eric, submitted this Dissertation for approval on 2021-09-14 at 12:13.</dim:field>
+          <dim:field mdschema="dc" element="description" qualifier="provenance">2021-11-16</dim:field>
+          <dim:field mdschema="dc" element="description" qualifier="provenance">DSpace AIP METS Submission Ingestion Package generated from ETD Administrator submission #853755 on 2021-11-16 at 12:08:08</dim:field>
+          <dim:field mdschema="thesis" element="degree" qualifier="date">2021-11</dim:field>
+          <dim:field mdschema="thesis" element="degree" qualifier="grantor">Harvard University Graduate School of Arts and Sciences</dim:field>
+          <dim:field mdschema="thesis" element="degree" qualifier="level">Doctoral Dissertation</dim:field>
+          <dim:field mdschema="thesis" element="degree" qualifier="name">Ph.D.</dim:field>
+          <dim:field mdschema="thesis" element="degree" qualifier="department">Systems Biology</dim:field>
+          <dim:field mdschema="dash" element="depositing" qualifier="author" authority="">Zinn, Eric Michael</dim:field>
+          <dim:field mdschema="dash" element="author" qualifier="email" authority="">ericm.zinn@gmail.com</dim:field>
+          <dim:field mdschema="dash" element="license">LAA</dim:field>
+          <dim:field mdschema="dash" element="embargo" qualifier="terms">2023-11-16</dim:field>
+          <dim:field mdschema="dash" element="embargo" qualifier="until">2023-11-16</dim:field>
+        </dim:dim>
+      </xmlData>
+    </mdWrap>
+  </dmdSec>
+  <amdSec ID="amd_whole_item">
+    <rightsMD ID="rightsMD_whole_item">
+      <mdWrap MDTYPE="OTHER" OTHERMDTYPE="METSRIGHTS">
+        <xmlData xmlns:rights="http://cosimo.stanford.edu/sdr/metsrights/" xsi:schemaLocation="http://cosimo.stanford.edu/sdr/metsrights/ http://www.loc.gov/standards/rights/METSRights.xsd">
+          <rights:RightsDeclarationMD RIGHTSCATEGORY="LICENSED">
+            <rights:Context in-effect="true" CONTEXTCLASS="GENERAL PUBLIC">
+              <rights:Permissions DISCOVER="true" DISPLAY="true" MODIFY="false" DELETE="false"/>
+            </rights:Context>
+          </rights:RightsDeclarationMD>
+        </xmlData>
+      </mdWrap>
+    </rightsMD>
+    <sourceMD ID="sourceMD_whole_item">
+      <mdWrap MDTYPE="OTHER" OTHERMDTYPE="AIP-TECHMD">
+        <xmlData xmlns:dim="http://www.dspace.org/xmlns/dspace/dim">
+          <dim:dim dspaceType="ITEM">
+            <dim:field mdschema="dc" element="creator">disspub@proquest.com</dim:field>
+          </dim:dim>
+        </xmlData>
+      </mdWrap>
+    </sourceMD>
+  </amdSec>
+  <amdSec ID="amd_primary">
+    <rightsMD ID="rightsMD_primary">
+      <mdWrap MDTYPE="OTHER" OTHERMDTYPE="METSRIGHTS">
+        <xmlData xmlns:rights="http://cosimo.stanford.edu/sdr/metsrights/" xsi:schemaLocation="http://cosimo.stanford.edu/sdr/metsrights/ http://www.loc.gov/standards/rights/METSRights.xsd">
+          <rights:RightsDeclarationMD RIGHTSCATEGORY="LICENSED">
+            <rights:Context in-effect="true" CONTEXTCLASS="MANAGED GRP">
+              <rights:UserName USERTYPE="GROUP">Staff</rights:UserName>
+              <rights:Permissions DISCOVER="true" DISPLAY="true" MODIFY="false" DELETE="false"/>
+            </rights:Context>
+            <rights:Context in-effect="false" start-date="2023-11-16" CONTEXTCLASS="GENERAL PUBLIC">
+              <rights:Permissions DISCOVER="true" DISPLAY="true" MODIFY="false" DELETE="false"/>
+            </rights:Context>
+          </rights:RightsDeclarationMD>
+        </xmlData>
+      </mdWrap>
+    </rightsMD>
+    <sourceMD ID="sourceMD_primary">
+      <mdWrap MDTYPE="OTHER" OTHERMDTYPE="AIP-TECHMD">
+        <xmlData xmlns:dim="http://www.dspace.org/xmlns/dspace/dim">
+          <dim:dim dspaceType="BITSTREAM">
+            <dim:field mdschema="dc" element="title">20210915 EZ Thesis Revised.pdf</dim:field>
+            <dim:field mdschema="dc" element="format" qualifier="mimetype">application/pdf</dim:field>
+            <dim:field mdschema="dc" element="format" qualifier="supportlevel">KNOWN</dim:field>
+            <dim:field mdschema="dc" element="format" qualifier="internal">false</dim:field>
+          </dim:dim>
+        </xmlData>
+      </mdWrap>
+    </sourceMD>
+  </amdSec>
+  <amdSec ID="amd_license_1908205">
+    <rightsMD ID="rightsMD_license_1908205">
+      <mdWrap MDTYPE="OTHER" OTHERMDTYPE="METSRIGHTS">
+        <xmlData xmlns:rights="http://cosimo.stanford.edu/sdr/metsrights/" xsi:schemaLocation="http://cosimo.stanford.edu/sdr/metsrights/ http://www.loc.gov/standards/rights/METSRights.xsd">
+          <rights:RightsDeclarationMD RIGHTSCATEGORY="LICENSED"/>
+        </xmlData>
+      </mdWrap>
+    </rightsMD>
+    <sourceMD ID="sourceMD_license_1908205">
+      <mdWrap MDTYPE="OTHER" OTHERMDTYPE="AIP-TECHMD">
+        <xmlData xmlns:dim="http://www.dspace.org/xmlns/dspace/dim">
+          <dim:dim dspaceType="BITSTREAM">
+            <dim:field mdschema="dc" element="title">Harvard_DASH_license.pdf</dim:field>
+            <dim:field mdschema="dc" element="format" qualifier="mimetype">application/pdf</dim:field>
+          </dim:dim>
+        </xmlData>
+      </mdWrap>
+    </sourceMD>
+  </amdSec>
+  <fileSec>
+    <fileGrp ID="etdadmin-mets-fgrp-1" USE="CONTENT">
+      <file GROUPID="etdadmin-mets-file-group" ID="etdadmin-mets-file-1997389" MIMETYPE="application/pdf" ADMID="amd_primary" SEQ="1">
+        <FLocat LOCTYPE="URL" xlink:href="20210915 EZ Thesis Revised.pdf"/>
+      </file>
+    </fileGrp>
+    <fileGrp ID="etdadmin-mets-fgrp-2" USE="LICENSE">
+      <file GROUPID="etdadmin-mets-file-group" ID="etdadmin-mets-file-1908205" MIMETYPE="application/pdf" ADMID="amd_license_1908205">
+        <FLocat LOCTYPE="URL" xlink:href="Harvard_DASH_license.pdf"/>
+      </file>
+    </fileGrp>
+  </fileSec>
+  <structMap ID="etdadmin-mets-struct-1" LABEL="structure" TYPE="LOGICAL">
+    <div ID="etdadmin-mets-div-1" DMDID="etdadmin-mets-dmd-1" TYPE="DSpace Item">
+      <fptr FILEID="etdadmin-mets-file-1997389"/>
+      <div ID="etdadmin-mets-div-1997389" TYPE="DSpace Content Bitstream">
+        <fptr FILEID="etdadmin-mets-file-1997389"/>
+      </div>
+    </div>
+  </structMap>
+</mets>
