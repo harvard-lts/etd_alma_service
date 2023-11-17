@@ -869,7 +869,7 @@ def cleanMetsFile(metsFile):
         metsFileContents = metsFileIn.readlines()
 
     # Remove control characters
-    r = re.compile('[\u0000-\u0008\u000b-\u001f]')
+    r = re.compile('[\u0000-\u0008\u000c\u000e-\u001f]')
     with open(metsFile, 'w') as metsFileOut:
         for line in metsFileContents:
             line = r.sub('', line)			
