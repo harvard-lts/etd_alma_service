@@ -42,9 +42,11 @@ degreeCodeName = {
 # to map degree level to degree level tracing used in datafield 830 subfield p
 degreeLevelTracing = {
 	"Bachelor's": "Theses",
+	"Bachelors": "Theses",
 	"Undergraduate": "Theses",
 	"Masters": "Theses",
-	"Doctoral": "Dissertations"
+	"Master's": "Theses",
+	"Doctoral": "Dissertations",
 }
 
 # A Python dictionary (or associtive array or hash) of dictionaries
