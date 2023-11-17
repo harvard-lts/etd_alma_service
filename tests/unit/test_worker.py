@@ -168,3 +168,14 @@ class TestWorkerClass():
         # reset file
         shutil.copy2(resetFile, testFile)
         assert contents == "<xml?><test>pass</test></xml>"
+
+    def test_problemFile(self):
+        problemFile = "./tests/data/problem.xml"
+        resetFile = "./tests/data/problem.xml.orig"
+        verbose = False
+        marcXmlValues = getFromMets(problemFile, verbose)
+        shutil.copy2(resetFile, problemFile)
+        assert marcXmlValues['proquestId'] == '28769235'
+        assert marcXmlValues['author'] == 'Zinn, Eric Michael'
+        assert marcXmlValues['title'] == 'Combinatorial Ancestral AAV ' \
+            'Capsid Libraries Enable Multidimensional Study of Vector Biology'
