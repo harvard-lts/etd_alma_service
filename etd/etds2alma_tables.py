@@ -45,9 +45,9 @@ degreeLevelTracing = {
 	"Bachelors": "Theses",
 	"Undergraduate": "Theses",
 	"Masters": "Theses",
-    "Master's": "Theses",
+	"Master's": "Theses",
 	"Doctoral": "Dissertations",
-    "Doctoral Dissertation": "Dissertations"
+	"Doctoral Dissertation": "Dissertations"
 }
 
 # A Python dictionary (or associtive array or hash) of dictionaries
