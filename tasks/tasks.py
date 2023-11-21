@@ -89,7 +89,8 @@ def send_to_alma(json_message):
     if "traceparent" in json_message:  # pragma: no cover, tracing is not being tested # noqa: E501
         carrier = {"traceparent": json_message["traceparent"]}
         ctx = TraceContextTextMapPropagator().extract(carrier)
-    with tracer.start_as_current_span("send_to_alma", context=ctx) \
+    with tracer.start_as_current_span("ALMA SERVICE - send_to_alma",
+                                      context=ctx) \
             as current_span:
         logger.debug("message")
         logger.debug(json_message)
