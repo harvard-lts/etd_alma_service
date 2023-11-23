@@ -39,4 +39,7 @@ if __name__ == '__main__':
     batch = output_file
 
     generatedMarcXmlValues = getFromMets(input_mets, verbose)
-    writeMarcXml(batch, batchOutputDir, generatedMarcXmlValues, verbose)
+    if generatedMarcXmlValues:
+        writeMarcXml(batch, batchOutputDir, generatedMarcXmlValues, verbose)
+    else:
+        print('Error getting all necessary fields from {}'.format(input_mets))
