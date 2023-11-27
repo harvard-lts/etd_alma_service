@@ -237,7 +237,7 @@ class Worker():
                 self.logger.error(f'skippping batch {batch} for school {school}')
                 continue
 
-            # Get needed data from mets file
+			# Get needed data from mets file
             marcXmlValues = getFromMets(metsFile, verbose)
 	
             if marcXmlValues:

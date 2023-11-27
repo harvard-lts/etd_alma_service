@@ -100,6 +100,14 @@ class TestWorkerClass():
         assert committeeMembers[4] == 'Claudio, Yazmin C'
         assert marcXmlValues['description'] == abstractText
 
+    def test_getFromMets_incorrect_degree(self, monkeypatch):
+        metsFile = "./tests/data/in/" \
+                   "proquest2023071720-993578-gsd-incorrect-degree/" \
+                   "mets_with_incorrect_degree_code.xml"
+        verbose = False
+        marcXmlValues = getFromMets(metsFile, verbose)
+        assert not marcXmlValues
+
     def test_writeMarcXml(self, monkeypatch):
         batch = "alma2023071720-993578-gsd"
         batchOutputDir = "./tests/data/in/proquest2023071720-993578-gsd"
