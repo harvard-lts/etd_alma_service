@@ -107,7 +107,7 @@ class TestWorkerClass():
         verbose = False
         marcXmlValues = getFromMets(metsFile, verbose)
         assert not marcXmlValues
-        
+
     def test_writeMarcXml(self, monkeypatch):
         batch = "alma2023071720-993578-gsd"
         batchOutputDir = "./tests/data/in/proquest2023071720-993578-gsd"
