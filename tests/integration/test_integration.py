@@ -47,6 +47,8 @@ class TestWorkerIntegrationClass():
                               last_modified_date, alma_dropbox_submission_date,
                               directory_id,
                               "integration_test", mongo_db)
+        if (mongo_client is not None):
+            mongo_client.close()
         # Assert that the function returns True
         assert result
 
