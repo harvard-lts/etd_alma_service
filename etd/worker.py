@@ -186,7 +186,7 @@ class Worker():
             schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', ALMA_TEST_BATCH_NAME)
             if schoolMatch:
                 school = schoolMatch.group(1)
-                batchesIn = [[school, ALMA_TEST_BATCH_NAME]]			
+                batchesIn = [[school, ALMA_TEST_BATCH_NAME]]   
         xmlCollectionOut = open(xmlCollectionFile, 'w')
         xmlCollectionOut.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         xmlCollectionOut.write(f'{xmlStartCollection}\n')
@@ -256,6 +256,8 @@ class Worker():
                 marcXmlRecord = False
                 try:
                     marcXmlRecord = writeMarcXml(batch, batchOutDir, marcXmlValues, verbose)
+                    self.logger.debug(f'Wrote MARCXML record for {batch} for {school}')
+                    current_span.add_event(f'Wrote MARCXML record for {batch} for {school}')
                 except Exception as err:
                     self.logger.error(f"Writing MARCXML record for {batch} for {school} failed, skipping", exc_info=True)
                     notifyJM.log('fail', f"Writing MARCXML record for {batch} for {school} failed, skipping", True)
@@ -266,6 +268,8 @@ class Worker():
                 # And then write xml record to collection file
                 if marcXmlRecord:
                     xmlCollectionOut.write(marcXmlRecord)
+                    self.logger.debug(f'MARCXML record for {batch} for {school} added to collection file')
+                    current_span.add_event(f'MARCXML record for {batch} for {school} added to collection file')
                     wroteXmlRecords = True
                     numRecordsUpdated = numRecordsUpdated + 1
                     # Update processed reference file
@@ -279,6 +283,7 @@ class Worker():
                     insertionDate = datetime.datetime.now().isoformat()
                     lastModifiedDate = datetime.datetime.now().isoformat()
                     almaDropboxSubmissionDate = datetime.datetime.now().isoformat()
+                    self.logger.debug(f'Updating mongo...')
                     writeSuccess = write_record(proquestId, 
                                                 schoolAlmaDropbox,
                                                 almaSubmissionStatus,
@@ -292,6 +297,9 @@ class Worker():
                         notifyJM.log('fail', f"Could not record proquest id {proquestId} in {batch} for school {school} in mongo", True)
                         current_span.set_status(Status(StatusCode.ERROR))	
                         current_span.add_event(f'Could not record proquest id {proquestId} in {batch} for school {school} in mongo')
+                    else:
+                        self.logger.debug(f'Proquest id {proquestId} in {batch} for school {school} recorded in mongo')
+                        current_span.add_event(f'Proquest id {proquestId} in {batch} for school {school} recorded in mongo')
 					
         # If marcxml file was written successfully, finish xml records 
 	    # collection file and then send it to dropbox for Alma to load
@@ -304,7 +312,9 @@ class Worker():
 	
             if xfer.error:
                 notifyJM.log('fail', xfer.error, True)
-
+                self.logger.error(xfer.error)
+                current_span.set_status(Status(StatusCode.ERROR))
+                current_span.add_event(xfer.error)				
             else:
                 targetFile = '/incoming/' + os.path.basename(xmlCollectionFile)
                 xfer.put_file(xmlCollectionFile, targetFile)
@@ -339,6 +349,8 @@ class Worker():
         notifyJM.log('pass', f'{numRecordsUpdated} records were updated', verbose)
         notifyJM.report('complete')
         current_span.add_event("completed")
+        if (mongo_client is not None):
+            mongo_client.close()		
 	
         # Returns True if records were updated, otherwise, return False
         return recordsWereUpdated
