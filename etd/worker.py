@@ -71,9 +71,6 @@ metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
 
 yyyymmdd          = get_date_time_stamp('day')
 yymmdd            = yyyymmdd[2:]
-yyyymmddhhmmss    = get_date_time_stamp('second')
-yymmddhhmmss       = yyyymmddhhmmss[2:]
-xmlCollectionFileName = f'AlmaDelivery{instance.capitalize()}_{yyyymmddhhmmss}.xml'
 
 reTheTitle = re.compile('"?(the) .*', re.IGNORECASE)
 reAnTitle  = re.compile('"?(an) .*', re.IGNORECASE)
@@ -185,9 +182,11 @@ class Worker():
               batchesIn.append([school, batch])
 
         # Start xml record collection output file
+        yyyymmddhhmm    = get_date_time_stamp('minute')
+        xmlCollectionFileName = f'AlmaDelivery{instance.capitalize()}_{yyyymmddhhmm}.xml'
         xmlCollectionFile = xmlCollectionFileName
         if integration_test:
-            xmlCollectionFile = f'AlmaDeliveryTest{instance.capitalize()}_{yyyymmddhhmmss}.xml'
+            xmlCollectionFile = f'AlmaDeliveryTest{instance.capitalize()}_{yyyymmddhhmm}.xml'
             schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', ALMA_TEST_BATCH_NAME)
             if schoolMatch:
                 school = schoolMatch.group(1)
