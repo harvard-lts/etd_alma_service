@@ -62,7 +62,7 @@ mongoUrl            = os.getenv('MONGO_URL')
 mongoDbName         = os.getenv('MONGO_DB_NAME')
 mongoDbCollection   = os.getenv('MONGO_DB_COLLECTION')
 instance			= os.getenv('INSTANCE', '')
-if (instance == 'prod'):
+if (instance == 'prod'): # pragma: no cover
     instance = ''
 
 metsDmdSecNamespace = '{http://www.loc.gov/METS/}'
