@@ -61,6 +61,7 @@ jobCode             = 'etds2alma'
 mongoUrl            = os.getenv('MONGO_URL')
 mongoDbName         = os.getenv('MONGO_DB_NAME')
 mongoDbCollection   = os.getenv('MONGO_DB_COLLECTION')
+instance			= os.getenv('INSTANCE')
 
 metsDmdSecNamespace = '{http://www.loc.gov/METS/}'
 metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
@@ -68,7 +69,9 @@ metsDimNamespace    = '{http://www.dspace.org/xmlns/dspace/dim}'
 
 yyyymmdd          = get_date_time_stamp('day')
 yymmdd            = yyyymmdd[2:]
-xmlCollectionFileName = f'AlmaDelivery_{yyyymmdd}.xml'
+yyyymmddhhmmss    = get_date_time_stamp('second')
+yymmddhhmmss       = yyyymmddhhmmss[2:]
+xmlCollectionFileName = f'AlmaDelivery_{instance}_{yyyymmddhhmmss}.xml'
 
 reTheTitle = re.compile('"?(the) .*', re.IGNORECASE)
 reAnTitle  = re.compile('"?(an) .*', re.IGNORECASE)
@@ -182,7 +185,7 @@ class Worker():
         # Start xml record collection output file
         xmlCollectionFile = xmlCollectionFileName
         if integration_test:
-            xmlCollectionFile = f'AlmaDeliveryTest_{yyyymmdd}.xml'
+            xmlCollectionFile = f'AlmaDeliveryTest_{instance}_{yyyymmddhhmmss}.xml'
             schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', ALMA_TEST_BATCH_NAME)
             if schoolMatch:
                 school = schoolMatch.group(1)
