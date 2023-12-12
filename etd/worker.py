@@ -902,9 +902,6 @@ def normalizeLookupKey(k):
 def existsInDash(mapFile):
 	# check that mapfile is not empty
 	try:
-		if os.stat(mapFile).st_size == 0:
-			return False
-		else:
-			return True
+		return os.stat(mapFile).st_size != 0
 	except Exception as err: # pragma: no cover
 		return False
