@@ -41,11 +41,13 @@ class TestWorkerIntegrationClass():
         insertion_date = datetime.datetime.now().isoformat()
         last_modified_date = datetime.datetime.now().isoformat()
         alma_dropbox_submission_date = datetime.datetime.now().isoformat()
+        in_dash = True
         # Call the write_record function with mock data
         result = write_record(proquest_id, school_alma_dropbox,
                               alma_submission_status, insertion_date,
                               last_modified_date, alma_dropbox_submission_date,
                               directory_id,
+                              in_dash,
                               "integration_test", mongo_db)
         if (mongo_client is not None):
             mongo_client.close()
@@ -60,6 +62,6 @@ class TestWorkerIntegrationClass():
                               "alma_submission_status", "2022-01-01",
                               "2022-01-02", "2022-01-03",
                               "proquest1234-5678-itest", "collection_name",
-                              mongo_db)
+                              False, mongo_db)
         # Assert that the function returns False
         assert not result
