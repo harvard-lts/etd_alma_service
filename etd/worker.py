@@ -906,5 +906,5 @@ def existsInDash(mapFile):
 			return False
 		else:
 			return True
-	except Exception as err:
+	except Exception as err: # pragma: no cover
 		return False
