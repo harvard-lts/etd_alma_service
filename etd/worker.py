@@ -231,6 +231,7 @@ class Worker():
                 continue
 
             mapFile = f'{batchOutDir}/mapfile'
+            isInDash = True
             if not os.path.exists(mapFile):
                 notifyJM.log('fail', f"{mapFile} not found", True)
                 notifyJM.log('fail', f'skippping batch {batch} for school {school}', True)
@@ -240,6 +241,8 @@ class Worker():
                 self.logger.error(f'{mapFile} not found')
                 self.logger.error(f'skippping batch {batch} for school {school}')
                 continue
+            else: # check if file is zero
+                isInDash = existsInDash(mapFile)
 
 			# Get needed data from mets file
             marcXmlValues = getFromMets(metsFile, verbose)
@@ -294,7 +297,8 @@ class Worker():
                                                 insertionDate,
                                                 lastModifiedDate,
                                                 almaDropboxSubmissionDate,
-												batch,
+                                                batch,
+                                                isInDash,
                                                 collectionName, mongoDb)
                     if (not writeSuccess):
                         self.logger.error(f'Could not record proquest id {proquestId} in {batch} for school {school} in mongo')
@@ -837,7 +841,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 @tracer.start_as_current_span("write_record")
 def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
                  insertion_date, last_modified_date,
-				 alma_dropbox_submission_date, directory_id,
+				 alma_dropbox_submission_date, directory_id, in_dash,
 				 collection_name, mongo_db):  # pragma: no cover
     logger = logging.getLogger('etd_alma')
     current_span = trace.get_current_span()
@@ -854,9 +858,9 @@ def write_record(proquest_id, school_alma_dropbox, alma_submission_status,
                             "alma_submission_status": alma_submission_status,
                             "insertion_date": insertion_date,
                             "last_modified_date": last_modified_date,
-                            "alma_dropbox_submission_date":
-							 alma_dropbox_submission_date,
-							 "directory_id": directory_id}
+                            "alma_dropbox_submission_date": alma_dropbox_submission_date,
+                            "directory_id": directory_id,
+                            "indash": in_dash}
         etds_collection = mongo_db[collection_name]
         etds_collection.insert_one(proquest_record)
         logger.info("proquest id " + str(proquest_id) + " written to mongo")
@@ -894,3 +898,10 @@ def cleanMetsFile(metsFile):
 def normalizeLookupKey(k):
 	# return first word of key
 	return k.split()[0]
+
+def existsInDash(mapFile):
+	# check that mapfile is not empty
+	try:
+		return os.stat(mapFile).st_size != 0
+	except Exception as err: # pragma: no cover
+		return False

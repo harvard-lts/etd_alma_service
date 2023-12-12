@@ -4,6 +4,7 @@ from etd.worker import writeMarcXml
 from etd.worker import escapeStr
 from etd.worker import cleanMetsFile
 from etd.worker import normalizeLookupKey
+from etd.worker import existsInDash
 import requests
 import lxml.etree as ET
 import os
@@ -198,3 +199,15 @@ class TestWorkerClass():
             == "Dissertations"
         assert degreeLevelTracing["Master's"] == "Theses"
         assert degreeLevelTracing["Bachelors"] == "Theses"
+
+    def test_is_in_dash_true(self):
+        mapFile = "./tests/data/mapfile"
+        result = existsInDash(mapFile)
+        # Assert that the function returns True
+        assert result
+
+    def test_is_in_dash_false(self):
+        emptyMapFile = "./tests/data/mapfile.empty"
+        result = existsInDash(emptyMapFile)
+        # Assert that the function returns False
+        assert not result
