@@ -141,7 +141,7 @@ class Worker():
         current_span.add_event("sending to alma worker main")
         self.logger.info('sending to alma worker main')
         self.send_to_alma_worker(force, verbose, integration_test)
-        self.logger.info('complete')
+        self.logger.info('export completed')
         return True
 		
     @tracer.start_as_current_span("send_to_alma_worker_main")
