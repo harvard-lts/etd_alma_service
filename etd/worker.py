@@ -813,7 +813,7 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 				# Datafield 909, proquest id
 				elif parent.attrib['tag'] == '909':
 					if child.attrib['code'] == 'k':
-						childText  = child.text.replace('LIB_CODE_3_CHAR', schools[marcXmlValues['school']]['lib_code_3_char'])
+						childText  = child.text.replace('LIB_CODE_3_CHAR', schools[marcXmlValues['school']]['lib_code_3_char']).lower()
 						child.text = childText
 					else:
 						removeNodes.add(parent)
