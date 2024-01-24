@@ -791,8 +791,8 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 				# Datafield 506, embargo date
 				# Remove element if embargo date is not found
 				elif parent.attrib['tag'] == '506':
-					if 'dash_id' not in marcXmlValues \
-					   or not marcXmlValues['dash_id']:
+					if 'dash_id' in marcXmlValues \
+					   and marcXmlValues['dash_id']:
 						if 'embargoDate' in marcXmlValues:
 							if child.attrib['code'] == 'a' and parent.attrib['ind1'] == '1':
 								childText  = child.text.replace('EMBARGO_DATE_VALUE', marcXmlValues['embargoDate'])
