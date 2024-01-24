@@ -763,7 +763,9 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 
 				# Datafield 852
 				elif parent.attrib['tag'] == '852':
-					if 'dash_id' in marcXmlValues: # print NET/ETD if there is a dash id
+					# print NET/ETD if there is a dash id
+					if 'dash_id' in marcXmlValues \
+					   and marcXmlValues['dash_id']:
 						if child.attrib['code'] == 'b' and child.text == 'NET':
 							pass
 						elif child.attrib['code'] == 'b' and child.text == 'LIB_CODE_3_CHAR':
@@ -779,7 +781,8 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 				# Remove element if a Dash ID was not found
 				elif parent.attrib['tag'] == '856':
 					if child.attrib['code'] == 'u':
-						if 'dash_id' in marcXmlValues:
+						if 'dash_id' in marcXmlValues \
+						    and marcXmlValues['dash_id']:
 							childText  = child.text.replace('DASH_LINK_VALUE', f"{dashLink}{marcXmlValues['dash_id']}")
 							child.text = childText
 						else:
@@ -788,7 +791,8 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 				# Datafield 506, embargo date
 				# Remove element if embargo date is not found
 				elif parent.attrib['tag'] == '506':
-					if 'dash_id' not in marcXmlValues:
+					if 'dash_id' not in marcXmlValues \
+					   or not marcXmlValues['dash_id']:
 						if 'embargoDate' in marcXmlValues:
 							if child.attrib['code'] == 'a' and parent.attrib['ind1'] == '1':
 								childText  = child.text.replace('EMBARGO_DATE_VALUE', marcXmlValues['embargoDate'])
@@ -805,7 +809,8 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 
 				# Datafield 583 field ONLY if there is an 852 LIB_CODE_3_CHAR/GEN
 				elif parent.attrib['tag'] == '583':
-					if 'dash_id' not in marcXmlValues:
+					if 'dash_id' not in marcXmlValues \
+					   and marcXmlValues['dash_id']:
 						pass
 					else:
 						removeNodes.add(parent)
