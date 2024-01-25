@@ -799,18 +799,19 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 								child.text = childText
 							else:
 								removeNodes.add(parent)
-						else: 
-							if child.attrib['code'] == 'a' and parent.attrib['ind1'] == '0':
-								pass
-							else:
-								removeNodes.add(parent)
+						elif child.attrib['code'] == 'a' and parent.attrib['ind1'] == '0':
+							pass
+						else:
+							removeNodes.add(parent)
+					elif child.attrib['code'] == 'a' and parent.attrib['ind1'] == '0':
+							pass
 					else:
 						removeNodes.add(parent)
 
 				# Datafield 583 field ONLY if there is an 852 LIB_CODE_3_CHAR/GEN
 				elif parent.attrib['tag'] == '583':
 					if 'dash_id' not in marcXmlValues \
-					   and marcXmlValues['dash_id']:
+					   or not marcXmlValues['dash_id']:
 						pass
 					else:
 						removeNodes.add(parent)
