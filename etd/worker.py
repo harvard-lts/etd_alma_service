@@ -799,8 +799,6 @@ def writeMarcXml(batch, batchOutDir, marcXmlValues, verbose):  # pragma: no cove
 								child.text = childText
 							else:
 								removeNodes.add(parent)
-						elif child.attrib['code'] == 'a' and parent.attrib['ind1'] == '0':
-							pass
 						else:
 							removeNodes.add(parent)
 					elif child.attrib['code'] == 'a' and parent.attrib['ind1'] == '0':
