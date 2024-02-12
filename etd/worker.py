@@ -176,10 +176,12 @@ class Worker():
 	    # Build batchesIn by looking at the data directory
         batchesIn = []
         for batch in os.listdir(dataDir + '/in'):
-          schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', batch)
-          if schoolMatch:
-              school = schoolMatch.group(1)
-              batchesIn.append([school, batch])
+            # log contents of dataDir/in/batch
+            self.logger.info(f'Contents of {dataDir}/in/{batch}: ' + str(os.listdir(dataDir + '/in/' + batch)))
+            schoolMatch = re.match(r'proquest\d+-\d+-(\w+)', batch)
+            if schoolMatch:
+                school = schoolMatch.group(1)
+                batchesIn.append([school, batch])
 
         # Start xml record collection output file
         yyyymmddhhmm    = get_date_time_stamp('minute')
