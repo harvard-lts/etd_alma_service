@@ -25,7 +25,6 @@ logger = logging.getLogger('etd_alma')
 
 FEATURE_FLAGS = "feature_flags"
 ALMA_FEATURE_FLAG = "alma_feature_flag"
-DASH_FEATURE_FLAG = "dash_feature_flag"
 
 # tracing setup
 JAEGER_NAME = os.getenv('JAEGER_NAME')
@@ -105,23 +104,13 @@ def send_to_alma(json_message):
             new_message[FEATURE_FLAGS] = feature_flags
             if ALMA_FEATURE_FLAG in feature_flags and \
                     feature_flags[ALMA_FEATURE_FLAG] == "on":  # pragma: no cover, unit test should not create a record # noqa: E501
-                if DASH_FEATURE_FLAG in feature_flags and \
-                        feature_flags[DASH_FEATURE_FLAG] == "on":
-                    # Create Alma Record
-                    logger.debug("FEATURE IS ON>>>>>CREATE ALMA RECORD")
-                    current_span.add_event("FEATURE IS ON>>>>> \
-                        CREATE ALMA RECORD")
-                    worker = Worker()
-                    msg = worker.send_to_alma(json_message)
-                    logger.debug("task succeeded: " + str(msg))
-                else:
-                    logger.debug("dash_feature_flag MUST BE ON FOR THE ALMA \
-                        HOLDING TO BE CREATED. dash_feature_flag \
-                        IS SET TO OFF")
-                    current_span.add_event("dash_feature_flag \
-                        MUST BE ON FOR THE ALMA \
-                        HOLDING TO BE CREATED. dash_feature_flag \
-                        IS SET TO OFF")
+                # Create Alma Record
+                logger.debug("FEATURE IS ON>>>>>CREATE ALMA RECORD")
+                current_span.add_event("FEATURE IS ON>>>>> \
+                    CREATE ALMA RECORD")
+                worker = Worker()
+                msg = worker.send_to_alma(json_message)
+                logger.debug("task succeeded: " + str(msg))
             else:
                 # Feature is off so do hello world
                 logger.debug("FEATURE FLAGS FOUND")
