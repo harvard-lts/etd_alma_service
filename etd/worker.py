@@ -208,7 +208,7 @@ class Worker():
                     with open(alreadyRunRef, 'r') as alreadyRunTable:
                         for line in alreadyRunTable:
                             if f'Alma {batch} {school}' == line.rstrip():
-                                notifyJM.log('fail', f'Batch {batch} has already been run. Use force flag to re-run.', True)
+                                notifyJM.log('warn', f'Batch {batch} has already been run. Use force flag to re-run.', True)
                                 current_span.set_status(Status(StatusCode.ERROR))
                                 current_span.add_event(f'Batch {batch} has already been run. Use force flag to re-run.')
                                 skipBatch = True
